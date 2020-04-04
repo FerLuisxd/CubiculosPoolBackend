@@ -17,14 +17,12 @@ export class AuthService {
         const factory = {
             create: async function (opts) {
                 console.debug('Starting instance')
-                console.time('startInstance')
                 let browser = await launch({
                     headless: true,
                     args: ['--no-sandbox', '--disable-setuid-sandbox'],
                 })
                 let page = await browser.newPage()
                 await page.goto('https://aulavirtual.upc.edu.pe/',{  timeout:6000})
-                console.timeEnd('startInstance')
                 return page
             },
             destroy: function (client: Page) {
@@ -43,21 +41,16 @@ export class AuthService {
         var opts = {
             max: 3, 
             min: 1,
-            minIdle: 1
+            minIdle: 2
         }
 
         this.puppeteerPool = new Pool(factory, opts)
     }
 
     async upbWebTestPool(username, password) {
+        let page: Page = await this.puppeteerPool.acquire()
         try {
-            let page: Page = await this.puppeteerPool.acquire()
-            console.log(page instanceof Object,typeof page)
-            await page.screenshot({
-                path: "./screenshot.jpg",
-                type: "jpeg",
-                fullPage: true
-            });            
+            console.log(page instanceof Object,typeof page)          
             await page.focus('#user_id');
             await page.keyboard.type(username);
             await page.focus('#password');
@@ -77,6 +70,7 @@ export class AuthService {
                 throw new BadRequestException(response);
             return 'Ok credidentials'
         } catch (error) {
+            this.puppeteerPool.release(page)
             throw error
         }
     }
