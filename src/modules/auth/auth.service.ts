@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { Browser, Page, launch } from 'puppeteer';
 import { async } from 'rxjs/internal/scheduler/async';
+import { AuthDto } from './auth.entity';
 const { Pool } = require('lightning-pool');
 // const puppeteer = require('puppeteer');
 
@@ -27,7 +28,7 @@ export class AuthService {
             },
             destroy: function (client: Page) {
                 console.debug('Destroying instance')
-                return client.goto('https://aulavirtual.upc.edu.pe/',{  timeout:6000})
+                return client.browser().close()
             },
             reset:  function (client: Page) {
                 console.debug('Reseting Instance')
@@ -50,7 +51,6 @@ export class AuthService {
     async upbWebTestPool(username, password) {
         let page: Page = await this.puppeteerPool.acquire()
         try {
-            console.log(page instanceof Object,typeof page)          
             await page.focus('#user_id');
             await page.keyboard.type(username);
             await page.focus('#password');
@@ -70,52 +70,9 @@ export class AuthService {
                 throw new BadRequestException(response);
             return 'Ok credidentials'
         } catch (error) {
-            this.puppeteerPool.release(page)
+            this.puppeteerPool.release(page)    
             throw error
         }
-    }
-
-    async upcWebTest(username, password) {
-        if (!this.puppeteerInstance) {
-            this.puppeteerInstance = await launch({
-                headless: true,
-                args: ['--no-sandbox', '--disable-setuid-sandbox'],
-            });
-        }
-        if (!this.puppeteerPage) {
-            this.puppeteerPage = await this.puppeteerInstance.newPage();
-        }
-        await this.puppeteerPage.goto(
-            'https://aulavirtual.upc.edu.pe/',
-            { waitUntil: 'networkidle2' },
-        );
-        console.log('Instances ready');
-        await this.puppeteerPage.waitForSelector('#user_id', {
-            timeout: 300,
-        });
-        await this.puppeteerPage.focus('#user_id');
-        await this.puppeteerPage.keyboard.type(username);
-        await this.puppeteerPage.focus('#password');
-        await this.puppeteerPage.keyboard.type(password);
-        // await this.puppeteerPage.screenshot()
-        await this.puppeteerPage.click('#entry-login');
-        await this.puppeteerPage.waitFor(700);
-        let response = await this.puppeteerPage.evaluate(() => {
-            try {
-                let error = document.getElementById('loginErrorMessage').textContent;
-                return error;
-            } catch (e) {
-                return null;
-            }
-        });
-        console.log('resp', response);
-        await this.puppeteerPage.reload();
-        if (response)
-            throw new NotFoundException(
-                response
-            );
-        else
-            return 'Ok credidentials'
     }
 
     upcApi() {
@@ -127,9 +84,8 @@ export class AuthService {
         let response = await this.upcApi()
         return
     }
-    async loginUserExp(body) {
-
-        let response = await this.upbWebTestPool(body.username, body.password)
+    async loginUserExp(body:AuthDto) {
+        let response = await this.upbWebTestPool(body.password, body.password)
         return response
     }
 
