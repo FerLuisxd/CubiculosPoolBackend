@@ -2,6 +2,8 @@ import { Injectable, NotFoundException, BadRequestException } from '@nestjs/comm
 import { Browser, Page, launch } from 'puppeteer';
 import { async } from 'rxjs/internal/scheduler/async';
 import { AuthDto } from './auth.entity';
+import { UserService } from '../user/user.service';
+import { User } from '../user/user.entity';
 const { Pool } = require('lightning-pool');
 // const puppeteer = require('puppeteer');
 
@@ -10,7 +12,7 @@ export class AuthService {
     puppeteerInstance: Browser
     puppeteerPage: Page
     puppeteerPool
-    constructor() {
+    constructor(private userService: UserService) {
         this.createFactory()
     }
 
@@ -68,7 +70,10 @@ export class AuthService {
             this.puppeteerPool.release(page)
             if (response)
                 throw new BadRequestException(response);
-            return 'Ok credidentials'
+            return {
+                statusCode: 200,
+                message: 'Ok'
+            }
         } catch (error) {
             this.puppeteerPool.release(page)    
             throw error
@@ -86,6 +91,10 @@ export class AuthService {
     }
     async loginUserExp(body:AuthDto) {
         let response = await this.upbWebTestPool(body.password, body.password)
+        if(response.statusCode == 200){
+            let user = new User()
+            //this.userService.saveNewUser()
+        }
         return response
     }
 

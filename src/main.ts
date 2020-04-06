@@ -12,6 +12,7 @@ async function bootstrap() {
     new FastifyAdapter({ logger: true })
   );
   app.useGlobalPipes(new ValidationPipe());
+  app.setGlobalPrefix('api');
   await app.listen(3000);
 }
 bootstrap();
