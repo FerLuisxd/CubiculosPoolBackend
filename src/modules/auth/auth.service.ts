@@ -90,7 +90,7 @@ export class AuthService {
         return
     }
     async loginUserExp(body:AuthDto) {
-        let response = await this.upbWebTestPool(body.password, body.password)
+        let response = await this.upbWebTestPool(body.userCode, body.password)
         if(response.statusCode == 200){
             let user = new User()
             //this.userService.saveNewUser()
