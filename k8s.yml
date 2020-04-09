@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: upc-pool
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: upc-pool
@@ -15,6 +15,15 @@ spec:
       containers:
       - image: node
         name: upc-pool
+        env:
+        - name: MONGO_SRV
+          value: mongodb+srv://SRN:123456789123@cubiculospool-oxewp.mongodb.net/CubiculosPoolDev?retryWrites=true&w=majority
+        - name: JWT_SECRET
+          value: hArDT0D3C0D3PAZZW0RD
+        - name: NODE_ENV
+          value: production
+        - name: PUPPETEER_SKIP_CHROMIUM_DOWNLOAD
+          value: "true"
 
 ---
 

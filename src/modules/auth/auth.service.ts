@@ -64,10 +64,7 @@ export class AuthService {
         const factory = {
             create: async function (opts) {
                 console.debug('Starting instance')
-                let browser = await launch({
-                    headless: true,
-                    args: ['--no-sandbox', '--disable-setuid-sandbox'],
-                })
+                let browser = await launch({headless: true,args: ['--no-sandbox', '--disable-setuid-sandbox']})
                 let page = await browser.newPage()
                 await page.goto('https://aulavirtual.upc.edu.pe/',{  timeout:6000})
                 return page
