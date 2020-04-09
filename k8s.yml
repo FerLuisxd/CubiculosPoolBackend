@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: upc-pool
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: upc-pool
+  template:
+    metadata:
+      labels:
+        app: upc-pool
+    spec:
+      containers:
+      - image: node
+        name: upc-pool
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: upc-pool
+  annotations:
+    dev.okteto.com/auto-ingress: "true"
+spec:
+  type: ClusterIP  
+  ports:
+  - name: "upc-pool"
+    port: 3000
+  selector:
+    app: upc-pool

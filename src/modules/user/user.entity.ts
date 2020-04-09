@@ -9,6 +9,13 @@ class HoursLeft {
 }
 export class User {
 
+    constructor(obj){
+        this.name= obj.name
+        this.userCode= obj.userCode ?? obj.username
+        this.userCode = this.userCode.toUpperCase()
+        this.email= `${this.userCode}@upc.edu.pe`
+    }
+
     @IsEmail()
     @IsNotEmpty()
     email: string;
