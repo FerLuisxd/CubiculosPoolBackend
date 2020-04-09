@@ -1,20 +1,12 @@
-FROM node:13 AS base
+FROM node:13
 
-WORKDIR /app
+WORKDIR /src
+
+COPY package.json package-lock.json ./
 RUN npm install
-RUN npm run build
-COPY  dist/main.js dist/main.js
-
-#################################
-
-FROM base AS dev
-
-COPY bashrc /root/.bashrc
-RUN npm install -g nodemon
-
-#################################
-
-FROM base AS prod
-
+RUN npm run start
+COPY . .
 EXPOSE 8080
-CMD node app.js
+EXPOSE 3000
+# CMD ['npm','run',"start"]
+

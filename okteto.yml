@@ -1,12 +1,12 @@
 name: upc-pool
-image: okteto/node
-command: ["npm","install"]
-workdir: /usr/
+image: node
+workdir: /src
+command: ["bash"]
 environment:
   - MONGO_SRV=mongodb+srv://SRN:123456789123@cubiculospool-oxewp.mongodb.net/CubiculosPoolDev?retryWrites=true&w=majority
   - environment=development
 forward:
-  - 3000:8000
+  - 3000:3000
   - 9229:9229
 persistentVolume:
   enabled: false
