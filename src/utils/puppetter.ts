@@ -8,7 +8,7 @@ export async function puppetterLogin(page:Page, username, password) {
     await page.click('#entry-login');
     await page.waitFor(900);
     console.log('trying')
-    const response =  await page.evaluate(async () => {
+    const response =  await page.evaluate(() => {
         try {
             let  user = document.getElementById("global-nav-link").textContent;
             user = user.substring(0,user.length - 28)

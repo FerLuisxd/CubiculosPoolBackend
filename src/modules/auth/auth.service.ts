@@ -43,7 +43,10 @@ export class AuthService {
                 console.log(user)
             }
             let jwt = JWTsign(user)
-            return jwt
+            return {
+                name: user.name,
+                token: jwt
+            }
         }
     }
 
