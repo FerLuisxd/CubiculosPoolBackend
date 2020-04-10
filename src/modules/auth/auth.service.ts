@@ -1,6 +1,5 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { Browser, Page, launch } from 'puppeteer';
-import { async } from 'rxjs/internal/scheduler/async';
 import { AuthDto } from './auth.entity';
 import { UserService } from '../user/user.service';
 import { User } from '../user/user.entity';
@@ -67,7 +66,7 @@ export class AuthService {
 
     createFactory() {
         const factory = {
-            create: async function (opts) {
+            create: async function () {
                 console.debug('Starting instance')
                 let browser = await launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] })
                 let page = await browser.newPage()

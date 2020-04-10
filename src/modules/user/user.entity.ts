@@ -1,4 +1,4 @@
-import { validate, IsNotEmpty, validateOrReject, IsEmail, IsString, IsNumber, IsBoolean, IsObject } from 'class-validator';
+import { IsNotEmpty, IsEmail, IsString, IsNumber, IsBoolean, IsObject } from 'class-validator';
 import * as mongoose from 'mongoose';
 
 class HoursLeft {
