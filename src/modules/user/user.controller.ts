@@ -6,14 +6,9 @@ import { User } from './user.entity';
 export class UserController {
   constructor(private readonly userService: UserService) { }
 
-  @Get()
-  getHello(): string {
-    return this.userService.getHello();
-  }
-
   @Post()
   async newUser(@Body() user:User) {
-    return await this.userService.saveNewUser(user);
+    return await this.userService.saveNew(user);
   }
 }
 

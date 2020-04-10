@@ -9,11 +9,7 @@ export class UserService {
     private number = 0
     constructor(@InjectModel('users') private userModel: Model<any>) { }
 
-    getHello(): string {
-        return 'Hello World!';
-    }
-
-    async saveNewUser(user: User) {
+    async saveNew(user: User) {
         try {
             user.inRoom =false
             user.hoursLeft ={
@@ -30,6 +26,13 @@ export class UserService {
         } catch (error) {
             throw new InternalServerErrorException(error.message)
         }
+    }
 
+    async findOne(user: User) {
+        try {
+            return await this.userModel.findOne({userCode:user.userCode})
+        } catch (error) {
+            throw new InternalServerErrorException(error.message)
+        }
     }
 }
