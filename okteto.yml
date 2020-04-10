@@ -1,11 +1,6 @@
 name: upc-pool
 workdir: /src
 command: ["bash"]
-environment:
-  - MONGO_SRV=mongodb+srv://SRN:123456789123@cubiculospool-oxewp.mongodb.net/CubiculosPoolDev?retryWrites=true&w=majority
-  - JWT_SECRET=hArDT0D3C0D3PAZZW0RD
-  - NODE_ENV=production
-  - PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 forward:
   - 3000:3000
   - 9229:9229
