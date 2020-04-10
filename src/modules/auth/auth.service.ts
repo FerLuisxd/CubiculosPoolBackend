@@ -22,17 +22,11 @@ export class AuthService {
         let page: Page = await this.puppeteerPool.acquire()
         let response = await puppetterLogin(page, userCode, password)
         this.puppeteerPool.release(page)
-        if (response)
-            throw new BadRequestException(response);
-        return {
-            status: 200
-        }
-    }
+        console.log('response', response)
+        if (response.valid === true && response.user)
+            return response
+        throw new BadRequestException(response);
 
-    async createUser(userCode, password) {
-        let user: User = new User({ userCode, password })
-        let response = await this.userService.saveNew(user)
-        return response
     }
 
     async loginUser() {
@@ -40,18 +34,17 @@ export class AuthService {
     }
     async loginUserExp(body: AuthDto) {
         let response = await this.upbWebTestPool(body.userCode, body.password)
-        if (response.status == 200) {
+        if (response.valid === true) {
             let schema: User = new User(body)
+            schema.name = response.user
             let user = await this.userService.findOne(schema)
             if (!user) {
-                user = await this.createUser(body.userCode, body.password)
+                user = await this.userService.saveNew(schema)
                 console.log(user)
             }
             let jwt = JWTsign(user)
             return jwt
-
         }
-
     }
 
     createFactory() {

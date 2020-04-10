@@ -18,7 +18,7 @@ export class UserService {
             user.secondaryHoursLeft = 2
             user.points = 0
             user.inRoom = false
-            user.name = `Usuario ${++this.number}`
+            user.name = user.name ?? `Usuario ${++this.number}`
             
             const createdUser = new this.userModel(user)
             return await createdUser.save()
