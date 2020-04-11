@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException, HttpException } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { Browser, Page, launch } from 'puppeteer';
 import { AuthDto } from './auth.entity';
 import { UserService } from '../user/user.service';
@@ -11,6 +11,8 @@ import { JWTsign } from '../../utils/jwt';
 
 @Injectable()
 export class AuthService {
+    puppeteerInstance: Browser
+    puppeteerPage: Page
     puppeteerPool
     constructor(private readonly userService: UserService) {
         this.createFactory()
@@ -21,11 +23,12 @@ export class AuthService {
         let response 
         try {
             response = await puppetterLogin(page, userCode, password)
-            page.goto('https://aulavirtual.upc.edu.pe/', { timeout: 10000 }) 
+            page.goto('https://aulavirtual.upc.edu.pe/', { timeout: 10000 })
             this.puppeteerPool.release(page)
         } catch (error) {
-            this.puppeteerPool.destroy(page)
-            throw new HttpException(error,500);
+            page.goto('https://aulavirtual.upc.edu.pe/', { timeout: 10000 })
+            this.puppeteerPool.release(page)
+            throw new BadRequestException(error);
         }
         if (response?.valid === true && response?.user)
             return response
@@ -58,7 +61,7 @@ export class AuthService {
         const factory = {
             create: async function () {
                 console.debug('Starting instance')
-                let browser = await launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox','--disable-gpu'] })
+                let browser = await launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox', '--single-process'] })
                 let page = await browser.newPage()
                 await page.goto('https://aulavirtual.upc.edu.pe/', { timeout: 10000 })
                 return page
@@ -69,16 +72,12 @@ export class AuthService {
             },
             reset: function (client: Page) {
                 console.debug('Reseting Instance')
-                return new Promise((resolve, reject) => {
-                    if(client.url?.() !='https://aulavirtual.upc.edu.pe/' ) return reject(client.url?.())
-                    resolve()
-                });  
+                if(client.url?.() !='https://aulavirtual.upc.edu.pe/' ) return client.goto('https://aulavirtual.upc.edu.pe/', {  timeout: 8000 }) 
+                return 
             },
-            validate: function(client:Page){       
-                return new Promise((resolve, reject) => {
-                    if(client.url?.() !='https://aulavirtual.upc.edu.pe/' ) return reject(client.url?.())
-                    resolve()
-                });   
+            validate: async function(client){       
+                if(client.url?.() !='https://aulavirtual.upc.edu.pe/' ) await client.goto('https://aulavirtual.upc.edu.pe/', {  timeout: 8000 }) 
+                return  client
             }
         };
 
@@ -89,7 +88,7 @@ export class AuthService {
         }
 
         this.puppeteerPool = new Pool(factory, opts)
-        this.puppeteerPool.start();
     }
 
 }
+//
