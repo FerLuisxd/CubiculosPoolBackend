@@ -1,0 +1,37 @@
+
+name: CD
+
+on: 
+  push:
+    branches:
+      - master
+
+name: example
+
+jobs:
+
+  devflow:
+    runs-on: ubuntu-latest
+    steps:
+    
+    - uses: okteto/actions/login@master
+      with:
+        token: ${{ secrets.OKTETO_TOKEN }}
+    
+    - name: "Create devlopment environments namespace"
+      uses: okteto/actions/namespace@master
+      with:
+        name: ferluisxd
+
+    - name: "Deploy application"
+      uses: okteto/actions/apply@master
+      with:
+        namespace: ferluisxd
+        manifest: k8s.yaml
+
+    - name: "Push changes"
+      uses: okteto/actions/namespace@master
+      with:
+        namespace: ferluisxd
+        name: upc-pool
+        deploy: "true"
