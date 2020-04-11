@@ -26,7 +26,7 @@ jobs:
       uses: okteto/actions/apply@master
       with:
         namespace: ferluisxd
-        manifest: k8s.yml
+        manifest: ./k8s.yml
 
     - name: "Push changes"
       uses: okteto/actions/namespace@master
