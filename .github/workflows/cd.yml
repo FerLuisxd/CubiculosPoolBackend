@@ -22,11 +22,11 @@ jobs:
       with:
         name: ferluisxd
 
-    # - name: "Deploy application"
-    #   uses: okteto/actions/apply@master
-    #   with:
-    #     namespace: ferluisxd
-    #     manifest: k8s.yaml
+    - name: "Deploy application"
+      uses: okteto/actions/apply@master
+      with:
+        namespace: ferluisxd
+        manifest: k8s.yml
 
     - name: "Push changes"
       uses: okteto/actions/namespace@master
