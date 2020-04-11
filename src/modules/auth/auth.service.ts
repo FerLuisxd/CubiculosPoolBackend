@@ -20,10 +20,17 @@ export class AuthService {
 
     async upbWebTestPool(userCode, password) {
         let page: Page = await this.puppeteerPool.acquire()
-        let response = await puppetterLogin(page, userCode, password)
-        this.puppeteerPool.release(page)
-        console.log('response', response)
-        if (response.valid === true && response.user)
+        let response 
+        try {
+            response = await puppetterLogin(page, userCode, password)
+            page.goto('https://aulavirtual.upc.edu.pe/', { timeout: 10000 })
+            this.puppeteerPool.release(page)
+        } catch (error) {
+            page.goto('https://aulavirtual.upc.edu.pe/', { timeout: 10000 })
+            this.puppeteerPool.release(page)
+            throw new BadRequestException(error);
+        }
+        if (response?.valid === true && response?.user)
             return response
         throw new BadRequestException(response);
 
@@ -56,7 +63,7 @@ export class AuthService {
                 console.debug('Starting instance')
                 let browser = await launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] })
                 let page = await browser.newPage()
-                await page.goto('https://aulavirtual.upc.edu.pe/', { timeout: 8000 })
+                await page.goto('https://aulavirtual.upc.edu.pe/', { timeout: 10000 })
                 return page
             },
             destroy: function (client: Page) {
@@ -65,7 +72,12 @@ export class AuthService {
             },
             reset: function (client: Page) {
                 console.debug('Reseting Instance')
-                return client.goto('https://aulavirtual.upc.edu.pe/', { timeout: 8000 })
+                if(client.url?.() !='https://aulavirtual.upc.edu.pe/' ) return client.goto('https://aulavirtual.upc.edu.pe/', {  timeout: 8000 }) 
+                return 
+            },
+            validate: async function(client){       
+                if(client.url?.() !='https://aulavirtual.upc.edu.pe/' ) await client.goto('https://aulavirtual.upc.edu.pe/', {  timeout: 8000 }) 
+                return  client
             }
         };
 
