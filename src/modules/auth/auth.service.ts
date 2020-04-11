@@ -24,7 +24,8 @@ export class AuthService {
             page.goto('https://aulavirtual.upc.edu.pe/', { timeout: 10000 })
             this.puppeteerPool.release(page)
         } catch (error) {
-            this.puppeteerPool.destroy(page);
+            page.goto('https://aulavirtual.upc.edu.pe/', { timeout: 10000 })
+            this.puppeteerPool.release(page)
             throw new HttpException(error,500);
         }
         if (response?.valid === true && response?.user)
@@ -85,7 +86,6 @@ export class AuthService {
         }
 
         this.puppeteerPool = new Pool(factory, opts)
-        this.puppeteerPool.start()
     }
 
 }
