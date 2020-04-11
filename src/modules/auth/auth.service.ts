@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, HttpException } from '@nestjs/common';
 import { Browser, Page, launch } from 'puppeteer';
 import { AuthDto } from './auth.entity';
 import { UserService } from '../user/user.service';
@@ -11,8 +11,6 @@ import { JWTsign } from '../../utils/jwt';
 
 @Injectable()
 export class AuthService {
-    puppeteerInstance: Browser
-    puppeteerPage: Page
     puppeteerPool
     constructor(private readonly userService: UserService) {
         this.createFactory()
@@ -26,9 +24,8 @@ export class AuthService {
             page.goto('https://aulavirtual.upc.edu.pe/', { timeout: 10000 })
             this.puppeteerPool.release(page)
         } catch (error) {
-            page.goto('https://aulavirtual.upc.edu.pe/', { timeout: 10000 })
-            this.puppeteerPool.release(page)
-            throw new BadRequestException(error);
+            this.puppeteerPool.destroy(page);
+            throw new HttpException(error,500);
         }
         if (response?.valid === true && response?.user)
             return response
@@ -88,6 +85,7 @@ export class AuthService {
         }
 
         this.puppeteerPool = new Pool(factory, opts)
+        this.puppeteerPool.start()
     }
 
 }

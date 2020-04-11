@@ -1,5 +1,4 @@
 import { Page } from "puppeteer";
-const  upcPage = 'https://aulavirtual.upc.edu.pe/'
 export async function puppetterLogin(page:Page, username, password) {
         await page.waitForSelector('#user_id',{timeout: 8000}) 
         await page.focus('#user_id');
@@ -24,9 +23,10 @@ export async function puppetterLogin(page:Page, username, password) {
             }
         });
         if(response.errormsg){
+            console.log('errorGettingUser', response.errormsg)
              response =  await page.evaluate(() => {
                 try {
-                    const errormsg = document.getElementById('loginErrorMessage')?.textContent
+                    const errormsg = document.getElementById('loginErrorMessage').textContent
                     return {
                         valid: false,
                         errormsg
