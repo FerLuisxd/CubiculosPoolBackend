@@ -21,12 +21,13 @@ jobs:
       uses: okteto/actions/namespace@master
       with:
         name: ferluisxd
-
+    - name: "Where am I?"
+      run: ls
     - name: "Deploy application"
       uses: okteto/actions/apply@master
       with:
         namespace: ferluisxd
-        manifest: ./k8s.yml
+        manifest: k8s.yml
 
     - name: "Push changes"
       uses: okteto/actions/namespace@master
