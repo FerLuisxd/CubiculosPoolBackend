@@ -1,9 +1,37 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { User } from './user.entity';
 
 @Injectable()
 export class UserService {
+    private number = 0
+    constructor(@InjectModel('users') private userModel: Model<any>) { }
 
-    getHello(): string {
-        return 'Hello World!';
+    async saveNew(user: User) {
+        try {
+            user.inRoom =false
+            user.hoursLeft ={
+                todayHours:2,
+                tomorrowHours:2
+            }
+            user.secondaryHoursLeft = 2
+            user.points = 0
+            user.inRoom = false
+            user.name = user.name ?? `Usuario ${++this.number}`
+            
+            const createdUser = new this.userModel(user)
+            return await createdUser.save()
+        } catch (error) {
+            throw new InternalServerErrorException(error.message)
+        }
+    }
+
+    async findOne(user: User) {
+        try {
+            return await this.userModel.findOne({userCode:user.userCode})
+        } catch (error) {
+            throw new InternalServerErrorException(error.message)
+        }
     }
 }

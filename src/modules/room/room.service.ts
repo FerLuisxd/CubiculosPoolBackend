@@ -1,6 +1,6 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { Browser, Page, launch } from 'puppeteer';
-import { AuthDto } from './auth.entity';
+import { RoomDto } from './room.entity';
 import { UserService } from '../user/user.service';
 import { User } from '../user/user.entity';
 import { Pool } from 'lightning-pool';
@@ -10,7 +10,7 @@ import { JWTsign } from '../../utils/jwt';
 /* eslint-disable prefer-const*/
 
 @Injectable()
-export class AuthService {
+export class RoomService {
     puppeteerInstance: Browser
     puppeteerPage: Page
     puppeteerPool
@@ -39,7 +39,7 @@ export class AuthService {
     async loginUser() {
         return
     }
-    async loginUserExp(body: AuthDto) {
+    async loginUserExp(body: RoomDto) {
         let response = await this.upbWebTestPool(body.userCode, body.password)
         if (response.valid === true) {
             let schema: User = new User(body)

@@ -3,10 +3,12 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { MongooseModule } from '@nestjs/mongoose';
 
+require('dotenv').config()
 @Module({
-  imports: [UserModule, AuthModule],
+  imports: [MongooseModule.forRoot(process.env.MONGO_SRV,{useNewUrlParser: true,useUnifiedTopology: true}),UserModule, AuthModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService]
 })
 export class AppModule {}
