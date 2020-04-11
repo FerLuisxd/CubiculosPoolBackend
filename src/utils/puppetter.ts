@@ -1,5 +1,6 @@
 import { Page } from "puppeteer";
 export async function puppetterLogin(page:Page, username, password) {
+    try {
         await page.waitForSelector('#user_id',{timeout: 8000}) 
         await page.focus('#user_id');
         await page.keyboard.type(username);
@@ -40,5 +41,9 @@ export async function puppetterLogin(page:Page, username, password) {
         }
        
         return response
+    } catch (error) {
+        throw error
+    }
+        
    
 }
