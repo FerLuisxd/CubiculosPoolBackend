@@ -8,7 +8,7 @@ export async function puppetterLogin(page:Page, username, password) {
         await page.keyboard.type(password);
         await page.click('#entry-login');
         await page.waitFor(900);
-        const response =  await page.evaluate(() => {
+        let response =  await page.evaluate(() => {
             try {
                 let  user = document.getElementById("global-nav-link").textContent;
                 user = user.substring(0,user.length - 28)
@@ -17,14 +17,29 @@ export async function puppetterLogin(page:Page, username, password) {
                     user
                 }
             } catch (e) {
-                console.log("error",e)
-                const errormsg = document.getElementById('loginErrorMessage')?.textContent ?? "error"
                 return {
-                    valid: false,
-                    errormsg
+                    valid:false,
+                    errormsg: e
                 }
             }
         });
+        if(response.errormsg){
+             response =  await page.evaluate(() => {
+                try {
+                    const errormsg = document.getElementById('loginErrorMessage')?.textContent ?? "error"
+                    return {
+                        valid: false,
+                        errormsg
+                    }
+                } catch (e) {
+                    return {
+                        valid: false,
+                        errormsg: e
+                    }
+                }
+            });
+        }
+       
         return response
    
 }

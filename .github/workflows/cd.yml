@@ -15,7 +15,7 @@ jobs:
     
     - name: checkout
       uses: actions/checkout@master
-      
+
     - uses: okteto/actions/login@master
       with:
         token: ${{ secrets.OKTETO_TOKEN }}
@@ -33,7 +33,7 @@ jobs:
         manifest: k8s.yml
 
     - name: "Push changes"
-      uses: okteto/actions/namespace@master
+      uses: okteto/actions/push@master
       with:
         namespace: ferluisxd
         name: upc-pool
