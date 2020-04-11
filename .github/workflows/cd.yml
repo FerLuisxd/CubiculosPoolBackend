@@ -6,8 +6,6 @@ on:
     branches:
       - master
 
-name: example
-
 jobs:
 
   devflow:
