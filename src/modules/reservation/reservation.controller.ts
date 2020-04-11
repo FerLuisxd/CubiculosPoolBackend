@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import { ReservationService } from './reservation.service';
 import { ReservationDto}  from './reservation.entity';
 @Controller('reservation')
@@ -6,9 +6,13 @@ export class ReservationController {
     constructor(private readonly reservationService: ReservationService) {}
 
 
-    @Post('/login/exp')
-    async loginUserExp(@Body() body:ReservationDto) {
-      return await this.reservationService.loginUserExp(body);
+    @Get()
+    async getAll(){
+      return await this.reservationService.getAll()
+    }
+    @Get(':id')
+    async getOneById(@Param('id') id){
+      return await this.reservationService.getOneById(id)
     }
 
 

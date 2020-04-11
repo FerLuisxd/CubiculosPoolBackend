@@ -17,13 +17,11 @@ export class ReservationService {
     constructor(@InjectModel('reservations') private reservationModel: Model<any>) {
     }
 
-    async upbWebTestPool(userCode, password) {
-        return
+    async getAll(){
+        return this.reservationModel.find({})
     }
-
-    async loginUserExp(body: ReservationDto) {
-        let response = await this.upbWebTestPool(body.userCode, body.password)
-       return
+    async getOneById(id){
+        return this.reservationModel.findOne({_id:id})
     }
 
 }

@@ -19,14 +19,12 @@ export class RoomService {
     }
 
 
-
-    async loginUser() {
-        return
+    async getAll(){
+        return this.roomModel.find({})
     }
-    async loginUserExp(body: RoomDto) {
-        return
+    async getOneById(id){
+        return this.roomModel.findOne({_id:id})
     }
-
 
 
 }
