@@ -11,13 +11,11 @@ import { JWTsign } from '../../utils/jwt';
 
 @Injectable()
 export class AuthService {
+    puppeteerInstance: Browser
+    puppeteerPage: Page
     puppeteerPool
-    upcPage:string
-    puppeteerArgs
     constructor(private readonly userService: UserService) {
         this.createFactory()
-        this.upcPage= 'https://aulavirtual.upc.edu.pe/'
-        this.puppeteerArgs ={timeout: 10000 }
     }
 
     async upbWebTestPool(userCode, password) {
@@ -25,10 +23,10 @@ export class AuthService {
         let response 
         try {
             response = await puppetterLogin(page, userCode, password)
-            page.goto( this.upcPage, { waitUntil:['networkidle2'],timeout: 10000 })
+            page.goto('https://aulavirtual.upc.edu.pe/', { timeout: 10000 })
             this.puppeteerPool.release(page)
         } catch (error) {
-            page.goto( this.upcPage, {  waitUntil:['networkidle2'],timeout: 10000 })
+            page.goto('https://aulavirtual.upc.edu.pe/', { timeout: 10000 })
             this.puppeteerPool.release(page)
             throw new BadRequestException(error);
         }
@@ -63,9 +61,9 @@ export class AuthService {
         const factory = {
             create: async function () {
                 console.debug('Starting instance')
-                let browser = await launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox', '--single-process'] })
+                let browser = await launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] })
                 let page = await browser.newPage()
-                page.goto( this.upcPage, this.puppeteerArgs )
+                await page.goto('https://aulavirtual.upc.edu.pe/', { timeout: 10000 })
                 return page
             },
             destroy: function (client: Page) {
@@ -74,11 +72,11 @@ export class AuthService {
             },
             reset: function (client: Page) {
                 console.debug('Reseting Instance')
-                if(client.url?.() != this.upcPage ) return client.goto( this.upcPage, this.puppeteerArgs ) 
+                if(client.url?.() !='https://aulavirtual.upc.edu.pe/' ) return client.goto('https://aulavirtual.upc.edu.pe/', {  timeout: 8000 }) 
                 return 
             },
             validate: async function(client){       
-                if(client.url?.() != this.upcPage ) await client.goto( this.upcPage, this.puppeteerArgs ) 
+                if(client.url?.() !='https://aulavirtual.upc.edu.pe/' ) await client.goto('https://aulavirtual.upc.edu.pe/', {  timeout: 8000 }) 
                 return  client
             }
         };
