@@ -25,11 +25,11 @@ jobs:
     - name: Cache Node.js modules
       uses: actions/cache@v1
       with:
-      path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
-      key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
-      restore-keys: |
-        ${{ runner.OS }}-node-
-        ${{ runner.OS }}-
+        path: ~/.npm # npm cache files are stored in `~/.npm` on Linux/macOS
+        key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.OS }}-node-
+          ${{ runner.OS }}-
     - name: Install dependencies
       run: npm install
     - name: build code
