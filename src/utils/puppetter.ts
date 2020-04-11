@@ -10,7 +10,7 @@ export async function puppetterLogin(page:Page, username, password) {
         await page.waitFor(900);
         let response =  await page.evaluate(() => {
             try {
-                let  user = document.getElementById("global-nav-link").textContent;
+                let  user = document.getElementById("global-nav-link").textContent
                 user = user.substring(0,user.length - 28)
                 return {
                     valid: true,
@@ -26,7 +26,7 @@ export async function puppetterLogin(page:Page, username, password) {
         if(response.errormsg){
              response =  await page.evaluate(() => {
                 try {
-                    const errormsg = document.getElementById('loginErrorMessage')?.textContent ?? "error"
+                    const errormsg = document.getElementById('loginErrorMessage')?.textContent
                     return {
                         valid: false,
                         errormsg
