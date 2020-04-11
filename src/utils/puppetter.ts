@@ -1,5 +1,4 @@
 import { Page } from "puppeteer";
-const  upcPage = 'https://aulavirtual.upc.edu.pe/'
 export async function puppetterLogin(page:Page, username, password) {
         await page.waitForSelector('#user_id',{timeout: 8000}) 
         await page.focus('#user_id');
