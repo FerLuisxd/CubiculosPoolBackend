@@ -46,4 +46,8 @@ export class UserService {
     async getOneById(id){
         return this.userModel.findOne({_id:id})
     }
+
+    async getOneByCode(userCode){
+        return this.userModel.findOne({userCode:userCode})
+    }
 }
