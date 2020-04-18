@@ -1,4 +1,4 @@
-import {  IsNotEmpty, IsString, Length, IsArray, IsNumber } from 'class-validator';
+import {  IsNotEmpty, IsString, Length, IsArray, IsNumber, IsBoolean } from 'class-validator';
 import * as mongoose from 'mongoose';
 
 export class RoomDto {
@@ -23,6 +23,9 @@ export class RoomDto {
    @IsArray()
    @IsNotEmpty()
    features:Array<string>
+   @IsBoolean()
+   @IsNotEmpty()
+   busy:boolean
     
 }
 
@@ -34,5 +37,6 @@ export const RoomSchema = new mongoose.Schema({
     building: { type: String, required: true },
     seats: { type: Number, required: true },
     floor: { type: String, required: true },
-    features: { type: Array, required: true }
+    features: { type: Array, required: true },
+    busy: {type:Boolean, required: true}
 })

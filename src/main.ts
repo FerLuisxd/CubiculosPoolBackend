@@ -16,7 +16,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.enableCors();
   app.useGlobalFilters(new AllExceptionsFilter());
-  const port = Number(process.env.PORT)||3000
+  const port = Number(process.env.PORT)||5000
   await app.listen(port, '0.0.0.0', function (err, address) {
     if (err) {
       console.log(err)

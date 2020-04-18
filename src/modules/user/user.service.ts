@@ -34,4 +34,12 @@ export class UserService {
             throw new InternalServerErrorException(error.message)
         }
     }
+
+    async getAll(){
+        try{
+            return await this.userModel.find()
+        } catch(error){
+            throw new InternalServerErrorException(error.message)
+        }
+    }
 }
