@@ -19,14 +19,8 @@ export class RoomService {
     }
     async saveRoom(room: RoomDto){    
         try{
-            //let newroom = await this.getOneById(schema._id)
-            //if(!newroom){
-                //const createdRoom= new this.roomModel(room)
-                const createdRoom= new this.roomModel(room)
-                //console.log(schema) 
-                return await createdRoom.save()
-            //}
-            
+            const createdRoom= new this.roomModel(room)
+            return await createdRoom.save()
         }catch(error){
             throw new InternalServerErrorException(error.message)
         }
@@ -36,7 +30,7 @@ export class RoomService {
         return this.roomModel.find({})
     }
     async getFree(){
-        return this,this.roomModel.find({busy:true})
+        return this.roomModel.find({busy:false})
     }
     async getOneById(id){
         return this.roomModel.findOne({_id:id})
