@@ -23,6 +23,10 @@ export class RoomController {
     async getFree(){
       return await this.roomService.getFree()
     }
+    @Get(':id/features')
+    async getFeaturesById(@Param('id') id){
+      return await this.roomService.getFeatures(id);
+    }
 
 
 
