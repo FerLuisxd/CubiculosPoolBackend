@@ -42,4 +42,8 @@ export class UserService {
             throw new InternalServerErrorException(error.message)
         }
     }
+
+    async getOneById(id){
+        return this.userModel.findOne({_id:id})
+    }
 }

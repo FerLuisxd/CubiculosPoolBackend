@@ -16,6 +16,10 @@ export class UserController {
     return await this.userService.saveNew(user);
   }
 
+  @Get('/:id')
+  async getUserById(){
+    return this.userService.getOneById('id')
+  }
 }
 
 
