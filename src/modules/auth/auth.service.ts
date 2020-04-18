@@ -41,7 +41,7 @@ export class AuthService {
     }
 
     async loginUser() {
-        return
+        return "hi"
     }
     async loginUserExp(body: AuthDto,flag = false) {
         let response = await this.upbWebTestPool(body.userCode, body.password,flag)
