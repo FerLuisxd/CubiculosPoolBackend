@@ -43,8 +43,9 @@ export class UserService {
         }
     }
 
-    async getOneById(id){
-        return this.userModel.findOne({_id:id})
+    async getOneById(id:string){
+        id = id.toUpperCase()
+        return this.userModel.findOne({userCode:id})
     }
 
     async getOneByCode(userCode){
