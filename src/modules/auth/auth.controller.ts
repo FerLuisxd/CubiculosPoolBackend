@@ -10,6 +10,10 @@ export class AuthController {
     async loginUserExp(@Body() body:AuthDto) {
       return await this.authService.loginUserExp(body);
     }
+    @Post('/login/exp2')
+    async loginUserExp2(@Body() body:AuthDto) {
+      return await this.authService.loginUserExp(body,true);
+    }
 
     @Post('/login')
     loginUser() {
