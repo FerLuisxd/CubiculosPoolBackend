@@ -1,11 +1,14 @@
 import { IsNotEmpty, IsEmail, IsString, IsNumber, IsBoolean, IsObject } from 'class-validator';
 import * as mongoose from 'mongoose';
+import { ApiProperty } from '@nestjs/swagger';
 
 class HoursLeft {
-
+    @ApiProperty({example:2})
     todayHours: number
-
-    tomorrowHours: number
+    @ApiProperty({example:2})
+   tomorrowHours: number
+    @ApiProperty({example:2})
+    secondaryHours : number
 }
 export class User {
 
@@ -17,32 +20,34 @@ export class User {
     }
 
     @IsEmail()
+    @ApiProperty({example:'correo@hotmail.com'})
     @IsNotEmpty()
     email: string;
 
     @IsString()
     @IsNotEmpty()
+    @ApiProperty({example:'Luis'})
     name: string;
 
     @IsNumber()
     @IsNotEmpty()
+    @ApiProperty({example:15})
     points: number;
 
     @IsString()
     @IsNotEmpty()
+    @ApiProperty({example:'u201711333'})
     userCode: string;
 
     @IsBoolean()
     @IsNotEmpty()
+    @ApiProperty({example:false})
     inRoom: boolean;
 
     @IsNotEmpty()
     @IsObject()
+    @ApiProperty({type:HoursLeft})
     hoursLeft: HoursLeft;
-
-    @IsNumber()
-    @IsNotEmpty()
-    secondaryHoursLeft: number
 }
 
 

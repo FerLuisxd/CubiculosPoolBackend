@@ -13,9 +13,9 @@ export class UserService {
             user.inRoom =false
             user.hoursLeft ={
                 todayHours:2,
-                tomorrowHours:2
+                tomorrowHours:2,
+                secondaryHours :2
             }
-            user.secondaryHoursLeft = 2
             user.points = 0
             user.inRoom = false
             user.name = user.name ?? `Usuario ${++this.number}`
@@ -45,6 +45,6 @@ export class UserService {
 
     async getOneById(id:string){
         id = id.toUpperCase()
-        return this.userModel.findOne({userCode:id})
+        return this.userModel.findOne({_id:id})
     }
 }
