@@ -1,10 +1,13 @@
-import { Controller, Post, Body, Get } from '@nestjs/common';
+import { Controller, Post, Body, Get, UseGuards } from '@nestjs/common';
 import { AuthService } from '../auth/auth.service';
 import { AuthDto} from './auth.entity'
 import { ApiTags, ApiExcludeEndpoint, ApiResponse } from '@nestjs/swagger';
 import { messages } from 'src/utils/messages';
+import { AuthGuard } from 'src/utils/auth.guard';
+import { UserId } from 'src/utils/user.decorator';
 @ApiTags('auth')
 @Controller('auth')
+@UseGuards(AuthGuard)
 @ApiResponse({status:'default', description:messages.basicError})
 export class AuthController {
     constructor(private readonly authService: AuthService) {}
@@ -22,6 +25,11 @@ export class AuthController {
     @Post('v1/login')
     loginUser(@Body() body:AuthDto) {
       return this.authService.loginUser();
+    }
+    @ApiExcludeEndpoint()
+    @Get('/logouts')
+    async logout(@UserId() id) {
+      return await this.authService.logout(id);
     }
     @ApiExcludeEndpoint()
     @Get()

@@ -45,7 +45,6 @@ export class UserService {
         }
     }
     async findOne(id,token = false) {
-        try {
             if(token) return await this.userModel.findOne({_id:id})
             else {
                 const userRes = await this.userModel.findOne({_id:id})
@@ -55,9 +54,6 @@ export class UserService {
                 }
                 else return userRes
             }
-        } catch (error) {
-            throw new InternalServerErrorException(error.message)
-        }
     }
 
     async getAll(){

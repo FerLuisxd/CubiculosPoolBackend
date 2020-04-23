@@ -1,11 +1,13 @@
-import { Controller, Post, Body, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, UseGuards } from '@nestjs/common';
 import { ReservationService } from './reservation.service';
 import { ReservationDto}  from './reservation.entity';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
 import { messages } from 'src/utils/messages';
+import { AuthGuard } from 'src/utils/auth.guard';
 
 @ApiTags('reservation')
 @Controller('reservation')
+@UseGuards(AuthGuard)
 @ApiResponse({status:'default', description:messages.basicError})
 export class ReservationController {
     constructor(private readonly reservationService: ReservationService) {}
@@ -22,6 +24,10 @@ export class ReservationController {
       return await this.reservationService.getOneById(id)
     }
 
-
+    @Get('/available')
+    @ApiResponse({status:200,type:ReservationDto, description:'Returns array of available to reserve rooms'})
+    async getFree(){
+      return await this.reservationService.getFree()
+    }
 
 }

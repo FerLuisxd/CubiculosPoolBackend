@@ -1,11 +1,13 @@
-import { Controller, Post, Body, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, UseGuards } from '@nestjs/common';
 import { RoomService } from './room.service';
 import { RoomDto} from './room.entity'
 
 import { ApiTags, ApiExcludeEndpoint, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { messages } from 'src/utils/messages';
+import { AuthGuard } from 'src/utils/auth.guard';
 @ApiTags('room')
 @Controller('room')
+@UseGuards(AuthGuard)
 @ApiResponse({status:'default', description:messages.basicError})
 export class RoomController {
     constructor(private readonly roomService: RoomService) {}
@@ -25,11 +27,6 @@ export class RoomController {
     @Post()
     async newRoom(@Body() room:RoomDto){
       return await this.roomService.saveRoom(room);
-    }
-    @Get('/available')
-    @ApiResponse({status:200,type:[RoomDto], description:'Returns array of available to reserve rooms'})
-    async getFree(){
-      return await this.roomService.getFree()
     }
     // @ApiExcludeEndpoint()
     @Get(':id/features')

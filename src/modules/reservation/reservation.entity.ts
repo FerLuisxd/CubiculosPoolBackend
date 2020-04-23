@@ -45,11 +45,11 @@ export class ReservationDto {
     userSecondaryCode: string
     @IsString()
     @IsNotEmpty()
-    @ApiProperty({example:'4/22/2020'})
+    @ApiProperty({example:'2020-07-14T00:00:00.000Z'})
     start: Date
     @IsDate()
     @IsNotEmpty()
-    @ApiProperty({example:'4/22/2020'})
+    @ApiProperty({example:'2020-07-14T02:00:00.000Z'})
     end: Date
     @ApiProperty({example:false})
     active: boolean

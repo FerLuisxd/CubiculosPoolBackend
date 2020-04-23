@@ -28,6 +28,18 @@ $ npm install
 
 ## Running the app
 
+* Before running we first need to setup the enviorment.
+So we need to create and .env file in the root folder and add this variables:
+
+.env:
+```
+MONGO_SRV = 'mongoUrlHere'
+JWT_SECRET = 'Ar3allyStrokP4ssworD'
+NODE_ENV = development
+```
+
+After that we can start the app normally: 
+
 ```bash
 # development
 $ npm run start

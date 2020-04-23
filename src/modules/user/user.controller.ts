@@ -5,6 +5,7 @@ import { ApiTags, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { GetUserDto } from './dto/getUser.dto';
 import { messages } from 'src/utils/messages';
 import { AuthGuard } from 'src/utils/auth.guard';
+import { UserId } from 'src/utils/user.decorator';
 
 @ApiTags('user')
 @Controller('user')
@@ -22,10 +23,9 @@ export class UserController {
   @Get('/:id')
   @ApiParam({name:'id',type:'string',example:'5e99dc2766e67109b80e4257', description:'User Id'})
   @ApiResponse({status:200,type:User, description:'Returns one User'})
-  async getUserById(@Param('id') id){
-    console.log('id',id)
-    return this.userService.findOneUserCode(id)
+  async getUserById(@Param('id') id,@UserId() idUser){
+    return this.userService.findOne(id)
   }
-}
+} 
 
 

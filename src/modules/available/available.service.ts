@@ -1,6 +1,6 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { Browser, Page, launch } from 'puppeteer';
-import { ReservationDto } from './reservation.entity';
+import { AvailableDto } from './available.entity'
 import { UserService } from '../user/user.service';
 import { User } from '../user/user.entity';
 import { Pool } from 'lightning-pool';
@@ -12,19 +12,19 @@ import { Model } from 'mongoose';
 /* eslint-disable prefer-const*/
 
 @Injectable()
-export class ReservationService {
+export class AvailableService {
 
-    constructor(@InjectModel('reservations') private reservationModel: Model<any>) {
+    constructor(@InjectModel('availables') private availableModel: Model<any>) {
     }
 
     async getAll(){
-        return this.reservationModel.find({})
+        return this.availableModel.find({})
     }
     async getOneById(id){
-        return this.reservationModel.findOne({_id:id})
+        return this.availableModel.findOne({_id:id})
     }
 
     async getFree(){
-        return this.reservationModel.find({})
+        return this.availableModel.find({})
     }
 }
