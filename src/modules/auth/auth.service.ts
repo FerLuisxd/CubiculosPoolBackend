@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, HttpException } from '@nestjs/common';
 import { Browser, Page, launch } from 'puppeteer';
 import { AuthDto } from './auth.entity';
 import { UserService } from '../user/user.service';
@@ -11,15 +11,20 @@ import { JWTsign } from '../../utils/jwt';
 
 @Injectable()
 export class AuthService {
-    puppeteerInstance: Browser
-    puppeteerPage: Page
     puppeteerPool
     constructor(private readonly userService: UserService) {
         this.createFactory()
     }
 
-    async upbWebTestPool(userCode, password) {
-        let page: Page = await this.puppeteerPool.acquire()
+    async upbWebTestPool(userCode, password,boolean) {
+        let page: Page;
+        if(boolean){
+            let browser = await launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] })
+            page = await browser.newPage()
+            await page.goto('https://aulavirtual.upc.edu.pe/', { timeout: 10000 })
+        }
+        else page = await this.puppeteerPool.acquire()
+
         let response 
         try {
             response = await puppetterLogin(page, userCode, password)
@@ -28,19 +33,18 @@ export class AuthService {
         } catch (error) {
             page.goto('https://aulavirtual.upc.edu.pe/', { timeout: 10000 })
             this.puppeteerPool.release(page)
-            throw new BadRequestException(error);
+            throw new HttpException(error,500);
         }
         if (response?.valid === true && response?.user)
             return response
         throw new BadRequestException(response);
-
     }
 
     async loginUser() {
-        return
+        return "hi"
     }
-    async loginUserExp(body: AuthDto) {
-        let response = await this.upbWebTestPool(body.userCode, body.password)
+    async loginUserExp(body: AuthDto,flag = false) {
+        let response = await this.upbWebTestPool(body.userCode, body.password,flag)
         if (response.valid === true) {
             let schema: User = new User(body)
             schema.name = response.user

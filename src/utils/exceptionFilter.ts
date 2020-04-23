@@ -23,6 +23,7 @@ import {
         try {
             description = JSON.parse(description)
         } catch (error) {}
+        if(status != 404)
         this.logger.error(exception.stack)
       response.status(status).send({
         description
