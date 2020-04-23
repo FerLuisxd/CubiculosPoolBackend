@@ -56,7 +56,6 @@ export const UserSchema = new mongoose.Schema({
     name: { type: String, required: true },
     userCode: { type: String, required: true },
     hoursLeft: { type: Object, required: true },
-    secondaryHoursLeft: { type: Number, required: true },
     points: { type: Number, required: true },
     inRoom: { type: Boolean, required: true },
 })

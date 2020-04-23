@@ -10,16 +10,16 @@ export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
 
-    @Post('/login/experimental/v1')
+    @Post('v2/login')
     async loginUserExp(@Body() body:AuthDto) {
       return await this.authService.loginUserExp(body);
     }
-    @Post('/login/experimental/v2')
+    @Post('v3/login')
     async loginUserExp2(@Body() body:AuthDto) {
       return await this.authService.loginUserExp(body,true);
     }
     @ApiExcludeEndpoint()
-    @Post('/login')
+    @Post('v1/login')
     loginUser(@Body() body:AuthDto) {
       return this.authService.loginUser();
     }
