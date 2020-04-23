@@ -5,7 +5,7 @@ import { UserService } from '../user/user.service';
 import { User } from '../user/user.entity';
 import { Pool } from 'lightning-pool';
 import { puppetterLogin } from '../../utils/puppetter';
-import { JWTsign } from '../../utils/jwt';
+import { JWTsign, JWTvalidate } from '../../utils/jwt';
 // const puppeteer = require('puppeteer');
 /* eslint-disable prefer-const*/
 
@@ -48,12 +48,13 @@ export class AuthService {
         if (response.valid === true) {
             let schema: User = new User(body)
             schema.name = response.user
-            let user = await this.userService.findOne(schema)
+            let user:User = await this.userService.findOneUserCode(schema.userCode)
             if (!user) {
                 user = await this.userService.saveNew(schema)
                 console.log(user)
             }
             let jwt = JWTsign(user)
+            this.userService.updateToken(user._id,jwt)
             return {
                 name: user.name,
                 token: jwt

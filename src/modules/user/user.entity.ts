@@ -19,6 +19,8 @@ export class User {
         this.email= `${this.userCode}@upc.edu.pe`
     }
 
+    _id: string
+
     @IsEmail()
     @ApiProperty({example:'correo@hotmail.com'})
     @IsNotEmpty()
@@ -58,5 +60,6 @@ export const UserSchema = new mongoose.Schema({
     hoursLeft: { type: Object, required: true },
     points: { type: Number, required: true },
     inRoom: { type: Boolean, required: true },
+    token: { type: String, required: false },
 })
 

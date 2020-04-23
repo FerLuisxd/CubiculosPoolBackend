@@ -26,10 +26,35 @@ export class UserService {
             throw new InternalServerErrorException(error.message)
         }
     }
-
-    async findOne(user: User) {
+    async updateToken(id:string,token: string) {
+        await this.userModel.updateOne({_id:id},{token:token})
+    }
+    async findOneUserCode(userCode:string,token = false) {
         try {
-            return await this.userModel.findOne({userCode:user.userCode})
+            if(token) return await this.userModel.findOne({userCode:userCode})
+            else {
+                const userRes = await this.userModel.findOne({userCode:userCode})
+                if(userRes){
+                    userRes.token = undefined
+                    return userRes
+                }
+                else return userRes
+            }
+        } catch (error) {
+            throw new InternalServerErrorException(error.message)
+        }
+    }
+    async findOne(id,token = false) {
+        try {
+            if(token) return await this.userModel.findOne({_id:id})
+            else {
+                const userRes = await this.userModel.findOne({_id:id})
+                if(userRes){
+                    userRes.token = undefined
+                    return userRes
+                }
+                else return userRes
+            }
         } catch (error) {
             throw new InternalServerErrorException(error.message)
         }
@@ -43,8 +68,5 @@ export class UserService {
         }
     }
 
-    async getOneById(id:string){
-        id = id.toUpperCase()
-        return this.userModel.findOne({_id:id})
-    }
+
 }
