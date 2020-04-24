@@ -4,6 +4,8 @@ import { ReservationDto}  from './reservation.entity';
 import { ApiTags, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { messages } from 'src/utils/messages';
 import { AuthGuard } from 'src/utils/auth.guard';
+import { PostReservationDto } from './dto/post.reservation.dto';
+import { UserId , UserCode } from 'src/utils/user.decorator';
 
 @ApiTags('reservation')
 @Controller('reservation')
@@ -16,8 +18,8 @@ export class ReservationController {
 
     @Get()
     @ApiResponse({status:200,type:[ReservationDto], description:'Returns array of reservations'})
-    async getAll(){
-      return await this.reservationService.getAll()
+    async getAll(@UserCode() user:string){
+      return await this.reservationService.getActiveByUserId(user)
     }
     @Get(':id')
     @ApiResponse({status:200,type:ReservationDto, description:'Returns one reservation'})
@@ -25,16 +27,10 @@ export class ReservationController {
       return await this.reservationService.getOneById(id)
     }
 
-    @Get('/available')
-    @ApiResponse({status:200,type:ReservationDto, description:'Returns array of available to reserve rooms'})
-    async getFree(){
-      return await this.reservationService.getFree()
-    }
-
     @Post()
     @ApiResponse({status:201,type:ReservationDto, description:'Makes reservations for 1 user'})
-    async Reserve(@Body() body){
-      return await this.reservationService.Reserve(body)
+    async Reserve(@Body() body: PostReservationDto,@UserId() id){
+      return await this.reservationService.Reserve(body,id)
     }
 
 }

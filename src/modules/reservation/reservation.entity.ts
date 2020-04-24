@@ -7,7 +7,7 @@ import { type } from 'os';
 export class Room {
     @ApiProperty({example:'5e99dc2766e67109b80e4257'})
     @IsMongoId()
-    _id: string
+    _id?: string
     @IsNumber()
     @IsNotEmpty()
     @ApiProperty({example:6})
@@ -16,6 +16,14 @@ export class Room {
     @IsNotEmpty()
     @ApiProperty({example:['Mac','Board']})
     features: Array<string>
+    @IsArray()
+    @IsNotEmpty()
+    @ApiProperty({example:'MO'})
+    office: string
+    @IsArray()
+    @IsNotEmpty()
+    @ApiProperty({example:'I707'})
+    code: string
 }
 
 export class ReservationDto {

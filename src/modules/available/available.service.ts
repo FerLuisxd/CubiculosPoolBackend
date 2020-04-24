@@ -22,12 +22,34 @@ export class AvailableService {
     async getOneById(id){
         return this.availableModel.findOne({_id:id})
     }
+    async deleteRooms(obj){
+        const query:any = {}
+        if(obj.start) {
+            query.start = moment(obj.start).tz("America/Lima").toISOString()
+        }
+        if(obj.code) {
+            query["available.code"] = obj.code
+        }
+        if(obj.office){
+            query["available.office"] = obj.office
+        }
+        if(obj?.hours > 1 && obj.start){
+            query.start = {
+                "$in": []
+            }
+            for (let i = 0; i < obj.hours; i++) {
+                query.start["$in"].push(moment(obj.start).tz("America/Lima").add(i,'hours').toISOString())
+            }
+        }
+        await this.availableModel.deleteMany(query)
+    }
 
-    async getOneRoom(obj){
+
+    async getAvailableRooms(obj){
         const query:any = {}
         let projetion = {}
         if(obj.start) {
-            query.start = obj.start
+            query.start = moment(obj.start).tz("America/Lima").toISOString()
         }
         if(obj.code) {
             query["available.code"] = obj.code

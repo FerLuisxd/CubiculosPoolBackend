@@ -29,7 +29,11 @@ export class UserService {
     async updateToken(id:string,token: string) {
         await this.userModel.updateOne({_id:id},{token:token})
     }
-    async findOneUserCode(userCode:string,token = false) {
+    async updateReduceHours(id:string,newHours:number,tomorrow = false) {
+        if(tomorrow) await this.userModel.updateOne({_id:id},{"hoursLeft.tomorrowHours":newHours})
+        await this.userModel.updateOne({_id:id},{"hoursLeft.todayHours":newHours})
+    }
+    async findOneUserCode(userCode:string,token = false):Promise<User> {
         try {
             if(token) return await this.userModel.findOne({userCode:userCode})
             else {
@@ -44,7 +48,7 @@ export class UserService {
             throw new InternalServerErrorException(error.message)
         }
     }
-    async findOne(id,token = false) {
+    async findOne(id,token = false):Promise<User> {
             if(token) return await this.userModel.findOne({_id:id})
             else {
                 const userRes = await this.userModel.findOne({_id:id})

@@ -9,6 +9,7 @@ import { RoomModule } from '../room/room.module';
 @Module({
   imports: [MongooseModule.forFeature([{ name: 'availables', schema: AvailableSchema }]),UserModule,RoomModule],
   controllers: [AvailableController],
-  providers: [AvailableService]
+  providers: [AvailableService],
+  exports:[AvailableService]
 })
 export class AvailableModule {}

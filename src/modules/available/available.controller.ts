@@ -1,13 +1,14 @@
 import { Controller, Post, Body, Get, Param, UseGuards, Query } from '@nestjs/common';
 import { AvailableService } from './available.service';
 import { AvailableDto}  from './available.entity';
-import { ApiTags, ApiResponse, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiResponse, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
 import { messages } from 'src/utils/messages';
 import { AuthGuard } from 'src/utils/auth.guard';
 
 @ApiTags('available')
 @Controller('available')
-// @UseGuards(AuthGuard)
+@UseGuards(AuthGuard)
+@ApiBearerAuth()
 @ApiResponse({status:'default', description:messages.basicError})
 export class AvailableController {
     constructor(private readonly availableService: AvailableService) {}
@@ -28,7 +29,7 @@ export class AvailableController {
         office,
         hours: hours || 1
       }
-      return await this.availableService.getOneRoom(object)
+      return await this.availableService.getAvailableRooms(object)
     }
     // @Get('/')
     // async getOneById(@Query('code') code,@Query('office') office,

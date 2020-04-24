@@ -50,6 +50,8 @@ export class User {
     @IsObject()
     @ApiProperty({type:HoursLeft})
     hoursLeft: HoursLeft;
+
+    token: string   
 }
 
 

@@ -18,6 +18,7 @@ export class AuthGuard implements CanActivate {
           }
           const respondeValidate = await this.validateAuthHeader(request.headers.authorization)
           request.userId = respondeValidate.userId
+          request.userCode = respondeValidate.userCode
           return true
 
       } catch (error) {
@@ -36,7 +37,8 @@ export class AuthGuard implements CanActivate {
         const valid = user?.token === authHeader[1]
         if(valid){
             return {
-                userId: id._id
+                userId: id._id,
+                userCode: user.userCode
             }
         }
         else{

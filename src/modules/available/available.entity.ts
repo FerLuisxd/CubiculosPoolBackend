@@ -5,9 +5,6 @@ import { type } from 'os';
 
 
 export class Room {
-    @ApiProperty({example:'5e99dc2766e67109b80e4257'})
-    @IsMongoId()
-    _id: string
     @IsString()
     @IsNotEmpty()
     @ApiProperty({example:'MO'})
