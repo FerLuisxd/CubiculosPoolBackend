@@ -27,4 +27,7 @@ export class ReservationService {
     async getFree(){
         return this.reservationModel.find({})
     }
+    async Reserve(body){
+        return this.reservationModel.find({})
+    }
 }

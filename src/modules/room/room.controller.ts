@@ -2,12 +2,13 @@ import { Controller, Post, Body, Get, Param, UseGuards } from '@nestjs/common';
 import { RoomService } from './room.service';
 import { RoomDto} from './room.entity'
 
-import { ApiTags, ApiExcludeEndpoint, ApiParam, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiExcludeEndpoint, ApiParam, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { messages } from 'src/utils/messages';
 import { AuthGuard } from 'src/utils/auth.guard';
 @ApiTags('room')
 @Controller('room')
 @UseGuards(AuthGuard)
+@ApiBearerAuth()
 @ApiResponse({status:'default', description:messages.basicError})
 export class RoomController {
     constructor(private readonly roomService: RoomService) {}
