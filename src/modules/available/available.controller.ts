@@ -16,10 +16,10 @@ export class AvailableController {
 
     @Get()
     @ApiResponse({status:200,type:[AvailableDto], description:'Returns one available'})
-    @ApiQuery({type:String,example:'I707',name:'code'})
-    @ApiQuery({type:String,example:'MO',name:'office'})
-    @ApiQuery({type:Number,example:2,name:'hours'  })
-    @ApiQuery({type:String,example:'2020-07-17 08:00:00.000',name:'start',description:'Local Hour'})
+    @ApiQuery({type:String,example:'I707',name:'code',required:false})
+    @ApiQuery({type:String,example:'MO',name:'office',required:false})
+    @ApiQuery({type:Number,example:2,name:'hours' ,required:false })
+    @ApiQuery({type:String,example:'2020-07-17 08:00:00.000',name:'start',description:'Local Hour',required:false})
     @ApiResponse({status:200,type:[AvailableDto], description:'Returns array of availables'})
     async getAll(@Query('code') code,@Query('office') office,
     @Query('hours') hours,@Query('start') start){

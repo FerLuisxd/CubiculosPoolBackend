@@ -13,7 +13,7 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter({ logger: true })
   );
-  const name = 'ShareMy'
+  const name = 'AppToShare'
   const options = new DocumentBuilder()
     .addBearerAuth()
     .setTitle( name)

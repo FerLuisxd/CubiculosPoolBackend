@@ -6,9 +6,9 @@ export const UserId = createParamDecorator(
       return request.userId;
     },
   );
-export const UserCode = createParamDecorator(
+export const UserDec = createParamDecorator(
     (data: unknown, ctx: ExecutionContext) => {
       const request = ctx.switchToHttp().getRequest();
-      return request.userCode;
+      return request.userInSession;
     },
   );

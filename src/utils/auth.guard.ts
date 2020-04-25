@@ -18,7 +18,7 @@ export class AuthGuard implements CanActivate {
           }
           const respondeValidate = await this.validateAuthHeader(request.headers.authorization)
           request.userId = respondeValidate.userId
-          request.userCode = respondeValidate.userCode
+          request.userInSession = respondeValidate.user
           return true
 
       } catch (error) {
@@ -38,11 +38,11 @@ export class AuthGuard implements CanActivate {
         if(valid){
             return {
                 userId: id._id,
-                userCode: user.userCode
+                user: user
             }
         }
         else{
-            this.logger.debug(`Invalid token for ${id}, resenting token`)
+            this.logger.debug(`Invalid token for ${id._id}, resenting token`)
             this.userService.updateToken(id,'')
             throw new UnauthorizedException(messages.authMissingError)
         }
