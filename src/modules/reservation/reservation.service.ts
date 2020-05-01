@@ -1,17 +1,12 @@
-import { Injectable, BadRequestException, Inject, HttpException } from '@nestjs/common';
-import { Browser, Page, launch } from 'puppeteer';
+import { Injectable, HttpException } from '@nestjs/common';
 import { ReservationDto } from './reservation.entity';
 import { UserService } from '../user/user.service';
 import { User } from '../user/user.entity';
-import { Pool } from 'lightning-pool';
-import { puppetterLogin } from '../../utils/puppetter';
-import { JWTsign } from '../../utils/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { AvailableService } from '../available/available.service';
 import { PostReservationDto } from './dto/post.reservation.dto';
 import * as moment from 'moment-timezone'
-import { exists } from 'fs';
 /* eslint-disable prefer-const*/
 
 @Injectable()

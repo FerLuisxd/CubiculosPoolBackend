@@ -1,11 +1,11 @@
 import { Injectable, BadRequestException, HttpException } from '@nestjs/common';
-import { Browser, Page, launch } from 'puppeteer';
+import {  Page, launch } from 'puppeteer';
 import { AuthDto } from './auth.entity';
 import { UserService } from '../user/user.service';
 import { User } from '../user/user.entity';
 import { Pool } from 'lightning-pool';
 import { puppetterLogin } from '../../utils/puppetter';
-import { JWTsign, JWTvalidate } from '../../utils/jwt';
+import { JWTsign } from '../../utils/jwt';
 // const puppeteer = require('puppeteer');
 /* eslint-disable prefer-const*/
 
