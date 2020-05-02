@@ -46,18 +46,22 @@ export class AvailableService {
         let closingWorkingHours = moment().tz("America/Lima").set({ hour:closingHours })  > moment().tz("America/Lima").set({ minute: 0, second: 0, millisecond: 0 })
         console.log(workingHours, closingWorkingHours)
         if(  workingHours && closingWorkingHours  ){
-            console.log('corriendo')
-            let rooms = await this.roomService.getAll() 
-            let objToInsert =         
-            {
-                "start" : moment().tz("America/Lima").add(1,'day').set({ minute: 0, second: 0, millisecond: 0 }).toISOString(),
-                "available" : rooms
+            let find = await this.availableModel.findOne({"start" : moment().tz("America/Lima").add(1,'day').set({ minute: 0, second: 0, millisecond: 0 }).toISOString()})
+            if(!find){
+                console.log('corriendo')
+                let rooms = await this.roomService.getAll() 
+                let objToInsert =         
+                {
+                    "start" : moment().tz("America/Lima").add(1,'day').set({ minute: 0, second: 0, millisecond: 0 }).toISOString(),
+                    "available" : rooms
+                }
+                console.log(objToInsert)
+               this.availableModel.insertMany([objToInsert])
+               let timeToDelete = moment().tz("America/Lima").add(-1,'hour').set({ minute: 0, second: 0, millisecond: 0 }).toISOString()
+               console.log('timeToDelete', timeToDelete)
+               this.availableModel.deleteOne({"start": timeToDelete })
             }
-            console.log(objToInsert)
-           this.availableModel.insertMany([objToInsert])
-           let timeToDelete = moment().tz("America/Lima").add(-1,'hour').set({ minute: 0, second: 0, millisecond: 0 }).toISOString()
-           console.log('timeToDelete', timeToDelete)
-           this.availableModel.deleteOne({"start": timeToDelete })
+          
         }
     }
 
