@@ -22,7 +22,9 @@ export class RoomService {
     }
 
     async getAll(){
-        return this.roomModel.find({})
+        return this.roomModel.find({},{
+            "_id":0, "__v":0,"floor":0, "building":0
+            })
     }
     async getFree(){
         return this.roomModel.find({busy:false})

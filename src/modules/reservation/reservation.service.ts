@@ -19,7 +19,7 @@ export class ReservationService {
         return this.reservationModel.find({})
     }
     async getActiveByUserId(userCode: string) {
-                let currentDate = moment().tz("America/Lima")
+        let currentDate = moment().tz("America/Lima")
         let query = {
             userCode: userCode,
             start: {
@@ -54,17 +54,17 @@ export class ReservationService {
                 active: false,
                 "seats.0": { "$exists": false }
             }
-            let response = await this.reservationModel.findOneAndUpdate(query,
-                {
-                    $push: {
-                        seats: {
-                            userCode: user.userCode,
-                            name: user.name
-                        }
+            let updateQuery: any = {
+                $push: {
+                    seats: {
+                        userCode: user.userCode,
+                        name: user.name
                     }
-                })
-            if(response){
-                this.userService.updateReduceHours(user._id,response.hours)
+                }
+            }
+            let response = await this.reservationModel.findOneAndUpdate(query, updateQuery)
+            if (response) {
+                this.userService.updateReduceHours(user._id, response.hours)
             }
             if (!response) {
                 let currentDate = moment().tz("America/Lima").set({ minute: 0, second: 0, millisecond: 0 })
@@ -77,16 +77,16 @@ export class ReservationService {
                     active: false,
                     "seats.1": { "$exists": false }
                 }
-                await this.reservationModel.update(query,
-                    {
-                        active: true,
-                        $push: {
-                            seats: {
-                                userCode: user.userCode,
-                                name: user.name
-                            }
+                let updateQuery: any = {
+                    active: true,
+                    $push: {
+                        seats: {
+                            userCode: user.userCode,
+                            name: user.name
                         }
-                    })
+                    }
+                }
+                await this.reservationModel.update(query, updateQuery)
             }
         }
         else throw new HttpException('User already in room', 400)
@@ -94,38 +94,38 @@ export class ReservationService {
     }
 
 
-    async joinReservation(id,user){
+    async joinReservation(id, user) {
         // IF PUBLIC update reservation resources
 
         //ELSE JUST JOIN
+        let updateQuery: any = {
+            $push: {
+                seats: {
+                    userCode: user.userCode,
+                    name: user.name
+                }
+            }
+        }
+        await this.reservationModel.update({ _id: id, active: true },
+            updateQuery)
 
-            await this.reservationModel.update({_id:id, active:true},
-                {
-                    $push: {
-                        seats: {
-                            userCode: user.userCode,
-                            name: user.name
-                        }
-                    }
-                })
-        
         throw new HttpException('Reservation not active', 400)
 
     }
-    async cancelReservation(reservationId:string,user: User) {
+    async cancelReservation(reservationId: string, user: User) {
         let now = moment().tz("America/Lima").set({ minute: 0, second: 0, millisecond: 0 })
         let query = {
             _id: reservationId,
-            active:false, 
-            start:{
+            active: false,
+            start: {
                 $gte: now.toISOString(),
-                $lte: now.add(1,'day').toISOString()
+                $lte: now.add(1, 'day').toISOString()
             }
         }
         return await this.reservationModel.findOneAndRemove(query)
     }
 
-    async getOneById(id):Promise<ReservationDto> {
+    async getOneById(id): Promise<ReservationDto> {
         return this.reservationModel.findOne({ _id: id })
     }
 
@@ -147,9 +147,9 @@ export class ReservationService {
         if (user.userCode == body.userSecondaryCode) new HttpException('UserCode and Secondary Code are the same', 400)
         let userSecondary = await this.userService.findOneUserCode(body.userSecondaryCode)
         if (!userSecondary) new HttpException('Secondary User does not exist', 400)
-        console.log(user.hoursLeft,user.hoursLeft.todayHours < body.hours,user.hoursLeft.tomorrowHours < body.hours,moment(body.start).date() == moment().date(),moment(body.start).date() == moment().date() + 1)
+        console.log(user.hoursLeft, user.hoursLeft.todayHours < body.hours, user.hoursLeft.tomorrowHours < body.hours, moment(body.start).date() == moment().date(), moment(body.start).date() == moment().date() + 1)
         if (moment(body.start).date() == moment().date()) {
-            if (user.hoursLeft.todayHours < body.hours){
+            if (user.hoursLeft.todayHours < body.hours) {
                 throw new HttpException('Not enough Hours', 409)
             }
             this.userService.updateReduceHours(user._id, user.hoursLeft.todayHours - body.hours)
