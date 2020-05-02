@@ -26,7 +26,6 @@ export class UserController {
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
   async getUserById(@Param('id') id,@UserId() idUser){
-    console.log(idUser, id)
     return this.userService.findOne(id||idUser)
   }
 } 

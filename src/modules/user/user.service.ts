@@ -31,7 +31,7 @@ export class UserService {
     }
     async updateReduceHours(id:string,newHours:number,tomorrow = false) {
         if(tomorrow) await this.userModel.updateOne({_id:id},{"hoursLeft.tomorrowHours":newHours})
-        await this.userModel.updateOne({_id:id},{"hoursLeft.todayHours":newHours})
+        else await this.userModel.updateOne({_id:id},{"hoursLeft.todayHours":newHours})
     }
     async findOneUserCode(userCode:string,token = false):Promise<User> {
         try {
