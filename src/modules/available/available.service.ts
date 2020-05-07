@@ -67,14 +67,11 @@ export class AvailableService {
     }
 
     async getAvailableRooms(obj) {
-        console.log("objeto", obj)
-        console.log("obj.start", obj.start)
         const query: any = {}
         console.log('entro?')
         let projetion = {}
-        if (obj.start) {            
-            query.start = moment(obj.start).tz("America/Lima").toISOString()
-            console.log("query start", query.start)
+        if (obj.start) {
+            //query.start = moment(obj.start).tz("America/Lima").toISOString()
         }
         if (obj.code) {
             if (!query.available) {
@@ -108,8 +105,10 @@ export class AvailableService {
         let response = await this.availableModel.find(query, projetion)
         response = JSON.parse(JSON.stringify(response))
         for (let i = 0; i < response.length; i++) {
+        console.log('query',query)
             response[i].start = moment(response[i].start).tz("America/Lima").format()
         }
+        console.log('getAvailableRooms', response)
         return response
     }
 }

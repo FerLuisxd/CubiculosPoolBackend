@@ -19,6 +19,7 @@ import { RoomService } from '../room/room.service';
 import { AvailableService } from '../available/available.service';
 import { PostReservationDto } from './dto/post.reservation.dto';
 import { IsNotEmpty } from 'class-validator';
+import { AvailableController } from '../available/available.controller';
 
 
 let mongoServer = null
@@ -94,21 +95,22 @@ const user : any = {
   },
   points : 0,
 }
+const goodPostBody : any = {
+  room: {
+    office: "MO",
+    code: "I708"
+  },
+  hours: 1,
+  userSecondaryCode: "u201711334",
+  start: "2020-05-07T19:00:00-05:00"
+}
+
 
 let db 
 let collection
 describe('Reservation Controller', () => {
   let controller: ReservationController;
-  const goodPostBody : PostReservationDto = {
-    room: {
-      office: "MO",
-      code: "I708"
-    },
-    hours: 1,
-    userSecondaryCode: "u201711334",
-    start: new Date("2020-05-08T00:00:00.000Z")
-  }
-
+  let controllerAvailable:AvailableController
 
   beforeAll(async () => {
     mongoServer = new MongoMemoryServer()
@@ -127,6 +129,7 @@ describe('Reservation Controller', () => {
     }).compile();
 
     controller = module.get<ReservationController>(ReservationController);
+    controllerAvailable = module.get<AvailableController>(AvailableController);
   });
 
   beforeEach(async () => {
@@ -154,15 +157,14 @@ describe('Reservation Controller', () => {
   });
 
   it('should reserve', async () => {
-    
+    console.log('response',JSON.stringify(await controllerAvailable.getAll('','','','')))
     const response = await controller.reserve(goodPostBody, user)
     console.log(response)
     //expect(0).toBe(0)    
    });
 
-  it('should return a reservation', async() => {
-    console.log(reservation._id)
-    const response = await controller.getOneById(reservation._id)    
-    expect(response).toBeTruthy()
+  it('should return a reservation', async () => {
+    const response :any = await controller.getOneById(reservation._id)
+    expect(JSON.parse(JSON.stringify(response))).toStrictEqual(JSON.parse(JSON.stringify(reservation)))
   });
 })
