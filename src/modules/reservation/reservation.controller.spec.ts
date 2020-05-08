@@ -41,10 +41,19 @@ const reservation :any =  {
   ],
   "userCode": "u201711333",
   "userSecondaryCode": "u201711334",
-  "start": "2020-07-14T00:00:00.000Z",
-  "end": "2020-07-14T02:00:00.000Z",
   "active": false
 }
+const user :any = {
+  name: ' Rodrigo Alfonso Lozano Campos',
+  userCode: 'U201713920',
+  email: 'U201713920@upc.edu.pe',
+  inRoom: false,
+  hoursLeft: { todayHours: 2, tomorrowHours: 2, secondaryHours: 2 },
+  points: 0,
+  __v: 0,
+  token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZWI0YzJjZWExMTU3NTlkNDQ0MzlmYzIiLCJpYXQiOjE1ODg5MDQ2NTQsImV4cCI6MTU5NjY4MDY1NH0.K9Dm0k7DTcwMJ8Oo9NJylSfN5vOu-T4qOsaXe74G8H4'
+}
+
 let db 
 let collection
 describe('Reservation Controller', () => {
@@ -83,15 +92,16 @@ describe('Reservation Controller', () => {
     const client = await MongoClient.connect(mongoUri)
     db = await client.db()
     collection = db.collection('reservations')
+    await db.collection('users').insert(user)
     await collection.remove({})
-    // reservation.start = 
+    reservation.start = moment().tz("America/Lima").add(10,'hours').set({ minute: 0, second: 0, millisecond: 0 }).toISOString()
+    reservation.end = moment().tz("America/Lima").add(12,'hours').set({ minute: 0, second: 0, millisecond: 0 }).toISOString()
     await collection.insert(reservation)
   });
 
 
-  it('should delete a reservation', () => {
-
-
-    // const response = await controller.getUserById(user._id,'')
+  it('should delete a reservation', async () => {
+    const response = await controller.cancel(reservation._id,user._id)
+    expect(await collection.findOne()).toBeNull
   });
 });
