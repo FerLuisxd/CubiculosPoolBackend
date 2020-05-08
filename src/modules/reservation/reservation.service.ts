@@ -113,14 +113,10 @@ export class ReservationService {
 
     }
     async cancelReservation(reservationId: string, user: User) {
-        let now = moment().tz("America/Lima").set({ minute: 0, second: 0, millisecond: 0 })
+        let currentDate = moment().tz("America/Lima")
         let query = {
             _id: reservationId,
             active: false,
-            start: {
-                $gte: now.toISOString(),
-                $lte: now.add(1, 'day').toISOString()
-            }
         }
         return await this.reservationModel.findOneAndRemove(query)
     }
