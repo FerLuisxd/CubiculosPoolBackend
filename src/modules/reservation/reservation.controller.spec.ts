@@ -15,6 +15,7 @@ import { AvailableSchema } from '../available/available.entity';
 import { ReservationService } from './reservation.service';
 import {MongoClient}  from 'mongodb'
 import * as moment from 'moment-timezone'
+import { PostReservationDto } from './dto/post.reservation.dto';
 
 
 let mongoServer = null
@@ -39,34 +40,74 @@ const reservation :any =  {
       "features": []
     }
   ],
-  "userCode": "u201711333",
-  "userSecondaryCode": "u201711334",
+  "userCode": "u201711338",
+  "userSecondaryCode": "u201711338",
   "active": false
 }
-const user :any = {
-  name: ' Rodrigo Alfonso Lozano Campos',
-  userCode: 'U201713920',
-  email: 'U201713920@upc.edu.pe',
-  inRoom: false,
-  hoursLeft: { todayHours: 2, tomorrowHours: 2, secondaryHours: 2 },
-  points: 0,
-  __v: 0,
-  token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZWI0YzJjZWExMTU3NTlkNDQ0MzlmYzIiLCJpYXQiOjE1ODg5MDQ2NTQsImV4cCI6MTU5NjY4MDY1NH0.K9Dm0k7DTcwMJ8Oo9NJylSfN5vOu-T4qOsaXe74G8H4'
+
+const available : any = {
+  "start" : "2020-05-08T00:00:00.000Z",
+  "available" : [ 
+      {
+          "features" : [ 
+              "Apple TV", 
+              "MAC"
+          ],
+          "office" : "MO",
+          "code" : "I708",
+          "seats" : 6
+      }, 
+      {
+          "features" : [ 
+              "Apple TV", 
+              "MAC"
+          ],
+          "office" : "MO",
+          "code" : "I707",
+          "seats" : 6
+      }, 
+      {
+          "features" : [ 
+              "Apple TV", 
+              "MAC"
+          ],
+          "office" : "MO",
+          "code" : "I709",
+          "seats" : 6
+      }
+  ],
+  "__v" : 0
+}
+
+const user : any = {
+  name : " Luis Fernando Vilca Flores",
+  userCode : "U201711338",
+  email : "U201711338@upc.edu.pe",
+  inRoom : false,
+  hoursLeft : {
+      "todayHours" : 2,
+      "tomorrowHours" : 2,
+      "secondaryHours" : 2
+  },
+  points : 0,
 }
 
 let db 
 let collection
+let collection2
+let collection3
 describe('Reservation Controller', () => {
   let reservationController: ReservationController;
-  const goodBody : PostReservationDto = {
+  const goodCreateBody : PostReservationDto = {
     room: {
       office: "MO",
       code: "I708"
     },
     hours: 2,
     userSecondaryCode: "u201711334",
-    start: "2020-07-14T00:00:00.000Z"
+    start: new Date("2020-05-08T00:00:00.000Z")
   }
+
 
   beforeAll(async () => {
     mongoServer = new MongoMemoryServer()
@@ -97,6 +138,10 @@ describe('Reservation Controller', () => {
     reservation.start = moment().tz("America/Lima").add(10,'hours').set({ minute: 0, second: 0, millisecond: 0 }).toISOString()
     reservation.end = moment().tz("America/Lima").add(12,'hours').set({ minute: 0, second: 0, millisecond: 0 }).toISOString()
     await collection.insert(reservation)
+    await collection2.insert(available)
+    await collection3.insert(user)
+
+    
   });
 
 
