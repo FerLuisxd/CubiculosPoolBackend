@@ -53,7 +53,12 @@
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-import": "^2.20.1",
+<<<<<<< Updated upstream
     "jest": "^25.1.0",
+=======
+    "jest": "^25.5.3",
+    "mongodb-memory-server": "^6.5.2",
+>>>>>>> Stashed changes
     "prettier": "^1.19.1",
     "supertest": "^4.0.2",
     "ts-jest": "25.2.1",

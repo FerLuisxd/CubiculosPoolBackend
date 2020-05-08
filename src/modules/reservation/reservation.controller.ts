@@ -1,8 +1,17 @@
 import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import { ReservationService } from './reservation.service';
 import { ReservationDto}  from './reservation.entity';
+<<<<<<< Updated upstream
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
 import { messages } from 'src/utils/messages';
+=======
+import { ApiTags, ApiResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
+import { messages } from '../../utils/messages';
+import { AuthGuard } from '../../utils/auth.guard';
+import { PostReservationDto } from './dto/post.reservation.dto';
+import { UserId , UserDec} from '../../utils/user.decorator';
+import { User } from '../user/user.entity';
+>>>>>>> Stashed changes
 
 @ApiTags('reservation')
 @Controller('reservation')

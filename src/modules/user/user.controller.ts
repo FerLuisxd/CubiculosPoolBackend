@@ -3,7 +3,13 @@ import { UserService } from './user.service';
 import { User } from './user.entity';
 import { ApiTags, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { GetUserDto } from './dto/getUser.dto';
+<<<<<<< Updated upstream
 import { messages } from 'src/utils/messages';
+=======
+import { messages } from '../../utils/messages';
+import { AuthGuard } from '../../utils/auth.guard';
+import { UserId } from '../../utils/user.decorator';
+>>>>>>> Stashed changes
 
 @ApiTags('user')
 @Controller('user')

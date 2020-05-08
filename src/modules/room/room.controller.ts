@@ -2,8 +2,14 @@ import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import { RoomService } from './room.service';
 import { RoomDto} from './room.entity'
 
+<<<<<<< Updated upstream
 import { ApiTags, ApiExcludeEndpoint, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { messages } from 'src/utils/messages';
+=======
+import { ApiTags, ApiExcludeEndpoint, ApiParam, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { messages } from '../../utils/messages';
+import { AuthGuard } from '../../utils/auth.guard';
+>>>>>>> Stashed changes
 @ApiTags('room')
 @Controller('room')
 @ApiResponse({status:'default', description:messages.basicError})
