@@ -1,5 +1,5 @@
 import { Injectable, BadRequestException, HttpException } from '@nestjs/common';
-import { Browser, Page, launch } from 'puppeteer';
+import {  Page, launch } from 'puppeteer';
 import { AuthDto } from './auth.entity';
 import { UserService } from '../user/user.service';
 import { User } from '../user/user.entity';
@@ -43,17 +43,20 @@ export class AuthService {
     async loginUser() {
         return "hi"
     }
+    async logout(id) {
+        return await this.userService.updateToken(id,'')
+    }
     async loginUserExp(body: AuthDto,flag = false) {
         let response = await this.upbWebTestPool(body.userCode, body.password,flag)
         if (response.valid === true) {
             let schema: User = new User(body)
             schema.name = response.user
-            let user = await this.userService.findOne(schema)
+            let user:User = await this.userService.findOneUserCode(schema.userCode)
             if (!user) {
                 user = await this.userService.saveNew(schema)
-                console.log(user)
             }
             let jwt = JWTsign(user)
+            this.userService.updateToken(user._id,jwt)
             return {
                 name: user.name,
                 token: jwt

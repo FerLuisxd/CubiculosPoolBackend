@@ -13,13 +13,14 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter({ logger: true })
   );
-  const name = 'ShareMy'
+  const name = 'AppToShare'
   const options = new DocumentBuilder()
+    .addBearerAuth()
     .setTitle( name)
     .setDescription(`The ${name} API description`)
     .setVersion('1.0')
     .build();
-    
+
     app.useGlobalPipes(new ValidationPipe());
     app.setGlobalPrefix('api');
 

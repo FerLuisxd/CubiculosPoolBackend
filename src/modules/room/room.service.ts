@@ -1,14 +1,8 @@
-import { Injectable, BadRequestException, InternalServerErrorException } from '@nestjs/common';
-import { Browser, Page, launch } from 'puppeteer';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { RoomDto } from './room.entity';
-import { UserService } from '../user/user.service';
-import { User } from '../user/user.entity';
-import { Pool } from 'lightning-pool';
-import { puppetterLogin } from '../../utils/puppetter';
-import { JWTsign } from '../../utils/jwt';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Schema } from 'mongoose';
-import { Room } from '../reservation/reservation.entity';
+import { Model } from 'mongoose';
+;
 // const puppeteer = require('puppeteer');
 /* eslint-disable prefer-const*/
 
@@ -28,7 +22,9 @@ export class RoomService {
     }
 
     async getAll(){
-        return this.roomModel.find({})
+        return this.roomModel.find({},{
+            "_id":0, "__v":0,"floor":0, "building":0
+            })
     }
     async getFree(){
         return this.roomModel.find({busy:false})
