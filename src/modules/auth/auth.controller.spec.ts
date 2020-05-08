@@ -8,19 +8,23 @@ import { ApiResponse } from '@nestjs/swagger';
 import { UserModule } from '../user/user.module';
 import { UserService } from '../user/user.service';
 import { MongoMemoryServer } from 'mongodb-memory-server'
-import { UserSchema } from '../user/user.entity.ts';
+import { UserSchema } from '../user/user.entity';
+import { async } from 'rxjs/internal/scheduler/async';
 
 
 
 
-describe('Auth Controller',async () => {
+describe('Auth Controller',() => {
   let authController: AuthController;
   let authService: AuthService;
+  let userService: UserService;
 
-  let goodBody: AuthDto = {userCode: "u201713920",password: "Intranet upc2020"};
-  let badBody: AuthDto = {userCode: "u000000000",password: "0000000000"};
+  const goodBody: AuthDto = {userCode: "u201713920",password: "Intranet upc2020"};
+  const badBody: AuthDto = {userCode: "u000000000",password: "0000000000"};
   let mongoServer = null
-
+  process.env = {
+    JWT_SECRET: 'asdsafasdsafasdsad12321421'
+  }
   beforeAll(async () => {
     mongoServer = new MongoMemoryServer()
     const mongoUri = await mongoServer.getUri()
@@ -34,14 +38,17 @@ describe('Auth Controller',async () => {
     
     authService = module.get<AuthService>(AuthService);
     authController = module.get<AuthController>(AuthController);
+    userService = module.get<UserService>(UserService);
     console.log(authController)
   });  
 
 
 
     it('should get token', async () => {
-      let response = await authController.loginUserExp2(goodBody)
+      const response = await authController.loginUserExp2(goodBody)
       expect(response.name).toBeDefined()
       expect(response.token).toBeDefined()
-  });
+      console.log(await userService.getAll())
+  })
+
 })
