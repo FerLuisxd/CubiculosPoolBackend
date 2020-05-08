@@ -16,6 +16,7 @@ import { ReservationService } from './reservation.service';
 import {MongoClient}  from 'mongodb'
 import * as moment from 'moment-timezone'
 import { PostReservationDto } from './dto/post.reservation.dto';
+import { Controller } from '@nestjs/common';
 
 
 let mongoServer = null
@@ -94,11 +95,9 @@ const user : any = {
 
 let db 
 let collection
-let collection2
-let collection3
 describe('Reservation Controller', () => {
-  let reservationController: ReservationController;
-  const goodCreateBody : PostReservationDto = {
+  let controller: ReservationController;
+  const goodPostBody : PostReservationDto = {
     room: {
       office: "MO",
       code: "I708"
@@ -125,23 +124,19 @@ describe('Reservation Controller', () => {
       UserModule,RoomModule,AvailableModule],
     }).compile();
 
-    reservationController = module.get<ReservationController>(ReservationController);
+    controller = module.get<ReservationController>(ReservationController);
   });
 
   beforeEach(async () => {
     const mongoUri = await mongoServer.getUri()
     const client = await MongoClient.connect(mongoUri)
     db = await client.db()
-    collection = db.collection('reservations')
+    collection = db.collection('reservations')    
     await db.collection('users').insert(user)
     await collection.remove({})
-    reservation.start = moment().tz("America/Lima").add(10,'hours').set({ minute: 0, second: 0, millisecond: 0 }).toISOString()
-    reservation.end = moment().tz("America/Lima").add(12,'hours').set({ minute: 0, second: 0, millisecond: 0 }).toISOString()
-    await collection.insert(reservation)
-    await collection2.insert(available)
-    await collection3.insert(user)
-
-    
+    reservation.start = moment().tz("America/Lima").add(0,'hours').set({ minute: 0, second: 0, millisecond: 0 }).toISOString()
+    reservation.end = moment().tz("America/Lima").add(2,'hours').set({ minute: 0, second: 0, millisecond: 0 }).toISOString()
+    await collection.insert(reservation)    
   });
 
 
@@ -149,4 +144,13 @@ describe('Reservation Controller', () => {
     const response = await controller.cancel(reservation._id,user._id)
     expect(await collection.findOne()).toBeNull
   });
-});
+
+  it('should reserve', async () => {
+     expect(0).toBe(0)    
+   });
+
+  it('should return a reservation', async () => {
+    const response = await controller.getOneById(reservation._id)
+    expect(0).toBe(0) 
+  })
+})
