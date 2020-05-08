@@ -68,6 +68,7 @@ export class AvailableService {
 
     async getAvailableRooms(obj) {
         const query: any = {}
+        console.log('entro?')
         let projetion = {}
         if (obj.start) {
             query.start = moment(obj.start).tz("America/Lima").toISOString()
