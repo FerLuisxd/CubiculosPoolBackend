@@ -46,7 +46,7 @@ describe('User Controller', () => {
     controller = module.get<UserController>(UserController);
   });  
 
-  it('should get all users', async () => {
+  it('should get one users', async () => {
     const response = await controller.getUserById(user._id,'')
     expect(response.name).toBe(user.name)
     expect(response.userCode).toBe(user.userCode)

@@ -11,6 +11,7 @@ import { RoomService } from '../room/room.service';
 import { AvailableDto } from './available.entity';
 import { UserService } from '../user/user.service';
 import { MongoClient } from 'mongodb';
+import { UserModule } from '../user/user.module';
 
 describe('Available Controller', () => {
   let availableController: AvailableController;
@@ -25,39 +26,79 @@ describe('Available Controller', () => {
 
   let db
   let collection
-
+  const available = {
+    "_id" : "5eacf43cfa07c2c07cb75d59",
+    "start" : "2020-05-03T04:00:00.000Z",
+    "available" : [ 
+        {
+            "features" : [ 
+                "Apple TV", 
+                "MAC"
+            ],
+            "office" : "MO",
+            "code" : "I708",
+            "seats" : 6
+        }, 
+        {
+            "features" : [ 
+                "Apple TV", 
+                "MAC"
+            ],
+            "office" : "MO",
+            "code" : "I707",
+            "seats" : 6
+        }, 
+        {
+            "features" : [ 
+                "Apple TV", 
+                "MAC"
+            ],
+            "office" : "MO",
+            "code" : "I709",
+            "seats" : 6
+        }
+    ],
+    "__v" : 0
+}
   beforeAll(async () => {
     mongoServer = new MongoMemoryServer()
     const mongoUri = await mongoServer.getUri()
 
-    const available = await MongoClient.connect(mongoUri)
-    db = await available.db()
-    collection = db.collection('availables')
-    await collection.insert(available)
-
-
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AvailableController],
-      providers: [AvailableService, RoomService, UserService],
-      imports: [MongooseModule.forRoot(mongoUri, {useNewUrlParser: true,useUnifiedTopology: true}),
+      providers: [AvailableService],
+      imports: [
+        MongooseModule.forRoot(mongoUri, {useNewUrlParser: true,useUnifiedTopology: true}),
         MongooseModule.forFeature([{ name: 'rooms', schema: RoomSchema }]),
-        MongooseModule.forFeature([{ name: 'availables', schema: AvailableSchema }]),
         MongooseModule.forFeature([{ name: 'users', schema: UserSchema }]),
-        AvailableDto,
-        RoomModule],
+        MongooseModule.forFeature([{ name: 'availables', schema: AvailableSchema }]),
+        UserModule,RoomModule],
     }).compile();
 
-    availableService = module.get<AvailableService>(AvailableService);
     availableController = module.get<AvailableController>(AvailableController);
-    roomService = module.get<RoomService>(RoomService);
-    userService = module.get<UserService>(UserService);
   });
 
-  it('should return availables', async () => {
+  beforeEach(async () => {
+    const mongoUri = await mongoServer.getUri()
+    const client = await MongoClient.connect(mongoUri)
+    db = await client.db()
+    collection = db.collection('availables')
+    await collection.remove({})
+    await collection.insertOne(available)
+  });
+
+  it('should return array of availables', async () => {
     const response = await availableController.getAll('', '', '' ,'')
-    console.log("//////////////////////////////////")
-    console.log(response.map.length)
-    expect(response.map.length).toBeGreaterThan(0);
-    console.log("Termine")
+    expect(response).toBeDefined()
+    expect(response.length).toBeGreaterThan(0)
+  });
+
+  
+  it('should return one available', async () => {
+    const response = await availableController.getAll('', '', '' ,'')
+    expect(response[0].start).not.toBe(available.start)
+    response[0].start = undefined
+    available.start = undefined
+    expect(response[0]).toStrictEqual(available);
   });
 });
