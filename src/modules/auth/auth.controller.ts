@@ -2,9 +2,9 @@ import { Controller, Post, Body, Get, UseGuards } from '@nestjs/common';
 import { AuthService } from '../auth/auth.service';
 import { AuthDto} from './auth.entity'
 import { ApiTags, ApiExcludeEndpoint, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
-import { messages } from 'src/utils/messages';
-import { AuthGuard } from 'src/utils/auth.guard';
-import { UserId } from 'src/utils/user.decorator';
+import { AuthGuard } from '../../utils/auth.guard';
+import { UserId } from '../../utils/user.decorator';
+import { messages } from '../../utils/messages';
 @ApiTags('auth')
 @Controller('auth')
 @ApiResponse({status:'default', description:messages.basicError})

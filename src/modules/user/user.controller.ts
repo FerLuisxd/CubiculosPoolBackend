@@ -3,9 +3,9 @@ import { UserService } from './user.service';
 import { User } from './user.entity';
 import { ApiTags, ApiParam, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { GetUserDto } from './dto/getUser.dto';
-import { messages } from 'src/utils/messages';
-import { AuthGuard } from 'src/utils/auth.guard';
-import { UserId } from 'src/utils/user.decorator';
+import { messages } from '../../utils/messages';
+import { AuthGuard } from '../../utils/auth.guard';
+import { UserId } from '../../utils/user.decorator';
 
 @ApiTags('user')
 @Controller('user')
