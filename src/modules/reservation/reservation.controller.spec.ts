@@ -48,7 +48,16 @@ const reservation :any =  {
 let db 
 let collection
 describe('Reservation Controller', () => {
-  let controller: ReservationController;
+  let reservationController: ReservationController;
+  const goodBody : PostReservationDto = {
+    room: {
+      office: "MO",
+      code: "I708"
+    },
+    hours: 2,
+    userSecondaryCode: "u201711334",
+    start: "2020-07-14T00:00:00.000Z"
+  }
 
   beforeAll(async () => {
     mongoServer = new MongoMemoryServer()
@@ -66,7 +75,7 @@ describe('Reservation Controller', () => {
       UserModule,RoomModule,AvailableModule],
     }).compile();
 
-    controller = module.get<ReservationController>(ReservationController);
+    reservationController = module.get<ReservationController>(ReservationController);
   });
 
   beforeEach(async () => {
