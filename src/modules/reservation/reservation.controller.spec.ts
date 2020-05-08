@@ -13,17 +13,44 @@ import { UserSchema } from '../user/user.entity';
 import { RoomSchema } from '../room/room.entity';
 import { AvailableSchema } from '../available/available.entity';
 import { ReservationService } from './reservation.service';
+import {MongoClient}  from 'mongodb'
+import * as moment from 'moment-timezone'
 
 
 let mongoServer = null
 process.env = {
   JWT_SECRET: 'asdsafasdsafasdsad12321421'
 }
-
+const reservation :any =  {
+  "room": {
+    "office": "MO",
+    "code": "I708",
+    "building": "I",
+    "seats": 6,
+    "floor": 7,
+    "features": [
+      "Mac",
+      "Board"
+    ]
+  },
+  "seats": [
+    {
+      "name": "Luis",
+      "features": []
+    }
+  ],
+  "userCode": "u201711333",
+  "userSecondaryCode": "u201711334",
+  "start": "2020-07-14T00:00:00.000Z",
+  "end": "2020-07-14T02:00:00.000Z",
+  "active": false
+}
+let db 
+let collection
 describe('Reservation Controller', () => {
   let controller: ReservationController;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     mongoServer = new MongoMemoryServer()
     const mongoUri = await mongoServer.getUri()
 
@@ -42,7 +69,20 @@ describe('Reservation Controller', () => {
     controller = module.get<ReservationController>(ReservationController);
   });
 
-  it('should be defined', () => {
-    expect(true).toBeDefined();
+  beforeEach(async () => {
+    const mongoUri = await mongoServer.getUri()
+    const client = await MongoClient.connect(mongoUri)
+    db = await client.db()
+    collection = db.collection('reservations')
+    await collection.remove({})
+    // reservation.start = 
+    await collection.insert(reservation)
+  });
+
+
+  it('should delete a reservation', () => {
+
+
+    // const response = await controller.getUserById(user._id,'')
   });
 });
