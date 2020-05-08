@@ -17,6 +17,8 @@ import {MongoClient}  from 'mongodb'
 import * as moment from 'moment-timezone'
 import { RoomService } from '../room/room.service';
 import { AvailableService } from '../available/available.service';
+import { PostReservationDto } from './dto/post.reservation.dto';
+import { IsNotEmpty } from 'class-validator';
 
 
 let mongoServer = null
@@ -102,7 +104,7 @@ describe('Reservation Controller', () => {
       office: "MO",
       code: "I708"
     },
-    hours: 2,
+    hours: 1,
     userSecondaryCode: "u201711334",
     start: new Date("2020-05-08T00:00:00.000Z")
   }
@@ -130,10 +132,16 @@ describe('Reservation Controller', () => {
   beforeEach(async () => {
     const mongoUri = await mongoServer.getUri()
     const client = await MongoClient.connect(mongoUri)
-    db = await client.db()
-    collection = db.collection('reservations')
+    db = await client.db()    
+
+    await db.collection('availables').remove({})
+    await db.collection('availables').insertOne(available)
+
+    await db.collection('users').remove({})
     await db.collection('users').insertOne(user)
-    await collection.remove({})
+
+    collection = db.collection('reservations')
+    await collection.remove({})    
     reservation.start = moment().tz("America/Lima").add(10,'hours').set({ minute: 0, second: 0, millisecond: 0 }).toISOString()
     reservation.end = moment().tz("America/Lima").add(12,'hours').set({ minute: 0, second: 0, millisecond: 0 }).toISOString()
     await collection.insertOne(reservation)
@@ -146,11 +154,15 @@ describe('Reservation Controller', () => {
   });
 
   it('should reserve', async () => {
-     expect(0).toBe(0)    
+    
+    const response = await controller.reserve(goodPostBody, user)
+    console.log(response)
+    //expect(0).toBe(0)    
    });
 
-  it('should return a reservation', async () => {
-    const response = await controller.getOneById(reservation._id)
-    expect(0).toBe(0) 
-  })
+  it('should return a reservation', async() => {
+    console.log(reservation._id)
+    const response = await controller.getOneById(reservation._id)    
+    expect(response).toBeTruthy()
+  });
 })

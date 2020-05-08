@@ -67,11 +67,14 @@ export class AvailableService {
     }
 
     async getAvailableRooms(obj) {
+        console.log("objeto", obj)
+        console.log("obj.start", obj.start)
         const query: any = {}
         console.log('entro?')
         let projetion = {}
-        if (obj.start) {
+        if (obj.start) {            
             query.start = moment(obj.start).tz("America/Lima").toISOString()
+            console.log("query start", query.start)
         }
         if (obj.code) {
             if (!query.available) {

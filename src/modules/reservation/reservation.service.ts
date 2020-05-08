@@ -138,7 +138,8 @@ export class ReservationService {
             start: body.start,
             office: body.room.office,
             hours: body.hours
-        })
+        })        
+        console.log("rooms", rooms)
         if (rooms.length != body.hours) new HttpException('Not enough available rooms', 400)
         if (user.userCode == body.userSecondaryCode) new HttpException('UserCode and Secondary Code are the same', 400)
         let userSecondary = await this.userService.findOneUserCode(body.userSecondaryCode)
