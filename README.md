@@ -1,11 +1,11 @@
-# CubiPool Backend  
+# AppToShare Backend  
 
 
 
 
 ## Description
 
-This application is the backend of [CubiPool](https://github.com/SReynoso-DEV/CubiculosPoolFrontend).
+This application is the backend of [AppToShare](https://github.com/SReynoso-DEV/AppToShareFrontend).
 
 Our goal is to imporve the current reservation process to make it easier for stuends and also easier to manage, with future proof in mind.
 

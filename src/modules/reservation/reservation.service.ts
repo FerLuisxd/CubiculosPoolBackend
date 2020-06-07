@@ -113,15 +113,24 @@ export class ReservationService {
 
     }
     async cancelReservation(reservationId: string, user: User) {
-        let now = moment().tz("America/Lima").set({ minute: 0, second: 0, millisecond: 0 })
         let query = {
             _id: reservationId,
             active: false,
-            start: {
-                $gte: now.toISOString(),
-                $lte: now.add(1, 'day').toISOString()
-            }
         }
+        let reservation = await this.reservationModel.findOne(query)
+        let duration = moment.duration(moment(reservation.end).diff(moment(reservation.start)));
+        let hours = duration.asHours();
+        if (moment(reservation.start).date() == moment().date()) {
+            this.userService.updateReduceHours(user._id, user.hoursLeft.todayHours + hours)
+        }
+        else if (moment(reservation.start).date() == moment().date() + 1) {
+            let hoursLeft = user.hoursLeft.tomorrowHours +  hours
+            this.userService.updateReduceHours(user._id, hoursLeft , true)
+        }        
+        else throw new HttpException("Active reservation",409)
+
+        this.availableService.addAvailable(JSON.parse(JSON.stringify(reservation)),hours)
+
         return await this.reservationModel.findOneAndRemove(query)
     }
 
@@ -142,7 +151,8 @@ export class ReservationService {
             start: body.start,
             office: body.room.office,
             hours: body.hours
-        })
+        })        
+        console.log("rooms", rooms)
         if (rooms.length != body.hours) new HttpException('Not enough available rooms', 400)
         if (user.userCode == body.userSecondaryCode) new HttpException('UserCode and Secondary Code are the same', 400)
         let userSecondary = await this.userService.findOneUserCode(body.userSecondaryCode)

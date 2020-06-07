@@ -2,10 +2,10 @@ import { Controller, Post, Body, Get, Param, UseGuards, Delete, Put } from '@nes
 import { ReservationService } from './reservation.service';
 import { ReservationDto}  from './reservation.entity';
 import { ApiTags, ApiResponse, ApiBearerAuth, ApiParam } from '@nestjs/swagger';
-import { messages } from 'src/utils/messages';
-import { AuthGuard } from 'src/utils/auth.guard';
+import { messages } from '../../utils/messages';
+import { AuthGuard } from '../../utils/auth.guard';
 import { PostReservationDto } from './dto/post.reservation.dto';
-import { UserId , UserDec} from 'src/utils/user.decorator';
+import { UserId , UserDec} from '../../utils/user.decorator';
 import { User } from '../user/user.entity';
 
 @ApiTags('reservation')
@@ -51,8 +51,8 @@ export class ReservationController {
     @Delete(':id')
     @ApiParam({name:'id', example:'5e99dc2766e67109b80e4257'})
     @ApiResponse({status:201,type:ReservationDto, description:'Deletes the reservation if it is before it starts && is not active'})
-    async cancel(@Param('id') reservationId: string,@UserId() id){
-      return await this.reservationService.cancelReservation(reservationId,id)
+    async cancel(@Param('id') reservationId: string,@UserDec() user){
+      return await this.reservationService.cancelReservation(reservationId,user)
     }
 
 }

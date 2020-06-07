@@ -44,8 +44,8 @@ export class AvailableService {
     async handleCron() {
         let workingHours = moment().tz("America/Lima").set({ hour:startingHours })  < moment().tz("America/Lima").set({ minute: 0, second: 0, millisecond: 0 })
         let closingWorkingHours = moment().tz("America/Lima").set({ hour:closingHours })  > moment().tz("America/Lima").set({ minute: 0, second: 0, millisecond: 0 })
-        console.log(workingHours, closingWorkingHours)
-        if(  workingHours && closingWorkingHours  ){
+        console.log( 'validate hours ',workingHours, closingWorkingHours)
+        //if(  workingHours && closingWorkingHours  ){
             let timeToDelete = moment().tz("America/Lima").add(-1,'hour').set({ minute: 0, second: 0, millisecond: 0 }).toISOString()
             console.log('timeToDelete', timeToDelete)
             this.availableModel.deleteOne({"start": timeToDelete })
@@ -63,14 +63,54 @@ export class AvailableService {
 
             }
           
+        //}
+    }
+    // {
+    //     "_id" : ObjectId("5eb63fda5c8cd600280e4b86"),
+    //     "seats" : [],
+    //     "active" : false,
+    //     "start" : ISODate("2020-05-03T04:00:00.000Z"),
+    //     "end" : ISODate("2020-05-03T05:00:00.000Z"),
+    //     "room" : {
+    //         "seats" : 6,
+    //         "office" : "MO",
+    //         "code" : "I708",
+    //         "features" : [ 
+    //             "Apple TV", 
+    //             "MAC"
+    //         ]
+    //     },
+    //     "userCode" : "U201713920",
+    //     "userSecondaryCode" : "u201713920",
+    //     "__v" : 0
+    // }
+    async addAvailable(obj,hours){
+        let query:any = {}
+        let room = {
+            features:obj.room.features,
+            office:obj.room.office,
+            code:obj.room.code,
+            seats:obj.seats.length
+        }
+        query.start = moment(obj.start).tz("America/Lima").toISOString()
+        let updateQuery: any = {
+            $push: {
+                available: room
+            }
+        }
+        await this.availableModel.update(query, updateQuery)
+        if (hours > 1) {
+            query.start = moment(obj.end).tz("America/Lima").toISOString() 
+            await this.availableModel.update(query, updateQuery)
         }
     }
 
     async getAvailableRooms(obj) {
         const query: any = {}
-        let projetion = {}
+        console.log('entro?')
+        let projection = {}
         if (obj.start) {
-            query.start = moment(obj.start).tz("America/Lima").toISOString()
+            //query.start = moment(obj.start).tz("America/Lima").toISOString()
         }
         if (obj.code) {
             if (!query.available) {
@@ -97,15 +137,17 @@ export class AvailableService {
             }
         }
         if (obj.hours && obj.start) {
-            projetion = { "start": 1 , "available":1}
+            projection = { "start": 1 , "available":1}
             if(obj.code || obj.office) 
-            projetion = { "start": 1, "available.$": 1 }
+            projection = { "start": 1, "available.$": 1 }
         }
-        let response = await this.availableModel.find(query, projetion)
+        let response = await this.availableModel.find(query, projection)
         response = JSON.parse(JSON.stringify(response))
         for (let i = 0; i < response.length; i++) {
+        console.log('query',query)
             response[i].start = moment(response[i].start).tz("America/Lima").format()
         }
+        console.log('getAvailableRooms', response)
         return response
     }
 }

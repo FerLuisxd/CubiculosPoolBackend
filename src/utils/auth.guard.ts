@@ -1,7 +1,7 @@
 import { Injectable, CanActivate, ExecutionContext, Inject, Logger, UnauthorizedException, HttpException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { messages } from './messages';
-import { UserService } from 'src/modules/user/user.service';
+import { UserService } from '../modules/user/user.service';
 import { JWTvalidate } from './jwt';
 
 @Injectable()
