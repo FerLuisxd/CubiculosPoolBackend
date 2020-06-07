@@ -32,6 +32,11 @@ export class AvailableController {
       }
       return await this.availableService.getAvailableRooms(object)
     }
+
+    @Get('/add')
+    async add(){
+      return await this.availableService.handleCron()
+    }
     // @Get('/')
     // async getOneById(@Query('code') code,@Query('office') office,
     // @Query('hours') hours,@Query('start') start){

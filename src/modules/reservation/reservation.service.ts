@@ -113,11 +113,24 @@ export class ReservationService {
 
     }
     async cancelReservation(reservationId: string, user: User) {
-        let currentDate = moment().tz("America/Lima")
         let query = {
             _id: reservationId,
             active: false,
         }
+        let reservation = await this.reservationModel.findOne(query)
+        let duration = moment.duration(moment(reservation.end).diff(moment(reservation.start)));
+        let hours = duration.asHours();
+        if (moment(reservation.start).date() == moment().date()) {
+            this.userService.updateReduceHours(user._id, user.hoursLeft.todayHours + hours)
+        }
+        else if (moment(reservation.start).date() == moment().date() + 1) {
+            let hoursLeft = user.hoursLeft.tomorrowHours +  hours
+            this.userService.updateReduceHours(user._id, hoursLeft , true)
+        }        
+        else throw new HttpException("Active reservation",409)
+
+        this.availableService.addAvailable(JSON.parse(JSON.stringify(reservation)),hours)
+
         return await this.reservationModel.findOneAndRemove(query)
     }
 
