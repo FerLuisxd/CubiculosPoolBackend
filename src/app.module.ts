@@ -11,7 +11,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 
 require('dotenv').config()
 @Module({
-  imports: [MongooseModule.forRoot(process.env.MONGO_SRV,{useNewUrlParser: true,useUnifiedTopology: true}),
+  imports: [MongooseModule.forRoot(process.env.MONGO_SRV,{useNewUrlParser: true,useUnifiedTopology: true, useFindAndModify:false}),
     UserModule, AuthModule,RoomModule,ReservationModule,AvailableModule,ScheduleModule.forRoot()],
   controllers: [AppController],
   providers: [AppService]

@@ -33,6 +33,12 @@ export class UserService {
         if(tomorrow) await this.userModel.updateOne({_id:id},{"hoursLeft.tomorrowHours":newHours})
         else await this.userModel.updateOne({_id:id},{"hoursLeft.todayHours":newHours})
     }
+    async updateReduceHoursSecondary(id:string,newHours:number) {
+        return await this.userModel.updateOne({_id:id},{"hoursLeft.secondaryHours":newHours})
+    }
+    async updateStatus(id:string, param: boolean) {
+        return await this.userModel.updateOne({_id:id},{"inRoom":param})
+    }
     async findOneUserCode(userCode:string,token = false):Promise<User> {
         try {
             if(token) return await this.userModel.findOne({userCode:userCode})

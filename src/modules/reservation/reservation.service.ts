@@ -63,31 +63,53 @@ export class ReservationService {
                 }
             }
             let response = await this.reservationModel.findOneAndUpdate(query, updateQuery)
-            if (response) {
-                this.userService.updateReduceHours(user._id, response.hours)
+            if (response != null) {
+                this.userService.updateStatus(user._id, true)
+                return response
+                //this.userService.updateReduceHours(user._id, response.hours)
             }
             if (!response) {
-                let currentDate = moment().tz("America/Lima").set({ minute: 0, second: 0, millisecond: 0 })
-                let query = {
-                    _id: id,
-                    start: {
-                        $gte: currentDate.toISOString(),
-                        $lte: currentDate.add(1, 'hours').toISOString()
-                    },
-                    active: false,
-                    "seats.1": { "$exists": false }
-                }
-                let updateQuery: any = {
-                    active: true,
-                    $push: {
-                        seats: {
-                            userCode: user.userCode,
-                            name: user.name
+                currentDate.add(-1, 'hours').toISOString()
+                    let query = {
+                        _id: id,
+                        start: {
+                            $gte: currentDate.toISOString(),
+                            $lte: currentDate.add(1, 'hours').toISOString()
+                        },
+                        active: false,
+                        "seats.1": { "$exists": false }
+                    }
+                    let updateQuery: any = {
+                        active: true,
+                        $push: {
+                            seats: {
+                                userCode: user.userCode,
+                                name: user.name
+                            }
                         }
                     }
-                }
-                await this.reservationModel.update(query, updateQuery)
+                    console.log('response',query, updateQuery)
+                    let responseSecondary = await this.reservationModel.findOneAndUpdate(query, updateQuery)
+                    console.log('response',responseSecondary)
+                    console.log('response', JSON.stringify(responseSecondary))
+                    let duration = moment.duration(moment(responseSecondary.end).diff(moment(responseSecondary.start)));
+                    let hours = duration.asHours();
+                    if (responseSecondary && user.hoursLeft.secondaryHours >= hours &&  responseSecondary.userSecondaryCode == user.userCode) {
+                        console.log('hours', hours)
+                        this.userService.updateReduceHoursSecondary(user._id, user.hoursLeft.secondaryHours - hours)
+                        this.userService.updateStatus(user._id, true)
+                        return responseSecondary
+                    }
+                    else{
+                        updateQuery ={
+                            active: false,
+                             $pull: { 'seats': { userCode: user.userCode } } 
+                        }
+                        this.reservationModel.findOneAndUpdate(query, updateQuery)
+                        throw new HttpException({ reasonCode: 3, reason: 'Secondary user does not have enough hours' }, 409)
+                    }
             }
+            throw new HttpException('User cannot activate this room', 400)
         }
         else throw new HttpException('User already in room', 400)
 
@@ -124,12 +146,12 @@ export class ReservationService {
             this.userService.updateReduceHours(user._id, user.hoursLeft.todayHours + hours)
         }
         else if (moment(reservation.start).date() == moment().date() + 1) {
-            let hoursLeft = user.hoursLeft.tomorrowHours +  hours
-            this.userService.updateReduceHours(user._id, hoursLeft , true)
-        }        
-        else throw new HttpException("Active reservation",409)
+            let hoursLeft = user.hoursLeft.tomorrowHours + hours
+            this.userService.updateReduceHours(user._id, hoursLeft, true)
+        }
+        else throw new HttpException("Active reservation", 409)
 
-        this.availableService.addAvailable(JSON.parse(JSON.stringify(reservation)),hours)
+        this.availableService.addAvailable(JSON.parse(JSON.stringify(reservation)), hours)
 
         return await this.reservationModel.findOneAndRemove(query)
     }
@@ -151,7 +173,7 @@ export class ReservationService {
             start: body.start,
             office: body.room.office,
             hours: body.hours
-        })        
+        })
         console.log("rooms", rooms)
         if (rooms.length != body.hours) new HttpException('Not enough available rooms', 400)
         if (user.userCode == body.userSecondaryCode) new HttpException('UserCode and Secondary Code are the same', 400)
