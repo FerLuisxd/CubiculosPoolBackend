@@ -34,6 +34,11 @@ export class ReservationController {
       return await this.reservationService.getActiveByUserIdSecondary(user.userCode)
     }
 
+    @Get('/active')
+    @ApiResponse({status:200,type:[ReservationDto], description:'Returns an active reservation'})
+    async getActive(@UserDec() user:User){
+      return await this.reservationService.getActivated(user.userCode)
+    }
 
     @Post()
     @ApiResponse({status:201,type:ReservationDto, description:'Makes reservations for 1 user'})

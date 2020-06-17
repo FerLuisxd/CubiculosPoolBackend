@@ -41,6 +41,14 @@ export class ReservationService {
         return this.reservationModel.find(query)
     }
 
+    async getActivated(userCode: string){
+        let query = {
+            userCode: userCode,
+            active: true
+        }
+        return this.reservationModel.find(query)
+    }
+
     async activateReservation(id, user: User) {
 
         if (user.inRoom == false) {
@@ -159,7 +167,6 @@ export class ReservationService {
     async getOneById(id): Promise<ReservationDto> {
         return this.reservationModel.findOne({ _id: id })
     }
-
     async getFree() {
         return this.reservationModel.find({})
     }
