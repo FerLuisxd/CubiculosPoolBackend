@@ -20,7 +20,7 @@ export class ReservationController {
     @Get()
     @ApiResponse({status:200,type:[ReservationDto], description:'Returns array of future reservations'})
     async getAll(@UserDec() user:User){
-      return await this.reservationService.getActiveByUserId(user.userCode)
+      return await this.reservationService.getReservationByUserId(user.userCode)
     }
     @Get(':id')
     @ApiResponse({status:200,type:ReservationDto, description:'Returns one reservation'})
@@ -31,7 +31,7 @@ export class ReservationController {
     @Get('/secondary')
     @ApiResponse({status:200,type:[ReservationDto], description:'Returns array of future reservations as secondaryUser'})
     async getSecondary(@UserDec() user:User){
-      return await this.reservationService.getActiveByUserIdSecondary(user.userCode)
+      return await this.reservationService.getReservationByUserIdSecondary(user.userCode)
     }
 
     @Get('/active')

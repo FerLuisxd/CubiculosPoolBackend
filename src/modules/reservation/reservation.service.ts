@@ -18,8 +18,8 @@ export class ReservationService {
     async getAll() {
         return this.reservationModel.find({})
     }
-    async getActiveByUserId(userCode: string) {
-        let currentDate = moment().tz("America/Lima")
+    async getReservationByUserId(userCode: string) {
+        let currentDate = moment().tz("America/Lima").set({ minute: 0, second: 0, millisecond: 0 })
         let query = {
             userCode: userCode,
             start: {
@@ -29,8 +29,8 @@ export class ReservationService {
         }
         return this.reservationModel.find(query)
     }
-    async getActiveByUserIdSecondary(userCode: string) {
-        let currentDate = moment().tz("America/Lima")
+    async getReservationByUserIdSecondary(userCode: string) {
+        let currentDate = moment().tz("America/Lima").set({ minute: 0, second: 0, millisecond: 0 })
         let query = {
             userSecondaryCode: userCode,
             start: {
