@@ -46,7 +46,7 @@ export class ReservationService {
             userCode: userCode,
             active: true
         }
-        return this.reservationModel.find(query)
+        return this.reservationModel.findOne(query)
     }
 
     async activateReservation(id, user: User) {
@@ -100,7 +100,7 @@ export class ReservationService {
                     let responseSecondary = await this.reservationModel.findOneAndUpdate(query, updateQuery)
                     console.log('response',responseSecondary)
                     console.log('response', JSON.stringify(responseSecondary))
-                    let duration = moment.duration(moment(responseSecondary.end).diff(moment(responseSecondary.start)));
+                    let duration = moment.duration(moment(responseSecondary.end).diff(moment(responseSecondary.start)));    
                     let hours = duration.asHours();
                     if (responseSecondary && user.hoursLeft.secondaryHours >= hours &&  responseSecondary.userSecondaryCode == user.userCode) {
                         console.log('hours', hours)
