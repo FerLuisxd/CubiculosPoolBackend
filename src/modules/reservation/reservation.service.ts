@@ -31,7 +31,7 @@ export class ReservationService {
     }
     async getReservationByUserIdSecondary(userCode: string) {
         let currentDate = moment().tz("America/Lima").set({ minute: 0, second: 0, millisecond: 0 })
-        let query = {
+        let query = {//
             userSecondaryCode: userCode,
             start: {
                 $gte: currentDate.toISOString(),
