@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, Length, IsDate, IsObject, IsMongoId, IsNumber, IsArray } from 'class-validator';
+import { IsNotEmpty, IsString, Length, IsDate, IsObject, IsMongoId, IsNumber, IsArray, IsBoolean } from 'class-validator';
 import * as mongoose from 'mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import { type } from 'os';
@@ -43,6 +43,12 @@ export class ReservationDto {
         features:[]
     }]})
     seats: Array<any>
+    @IsBoolean()
+    @ApiProperty({example:false})
+    public: boolean
+    @IsArray()
+    @ApiProperty({example:['MAC', 'Apple TV']})
+    publicFeatures: Array<any>
     @IsString()
     @IsNotEmpty()
     @ApiProperty({example:'u201711333'})
@@ -73,4 +79,6 @@ export const ReservationSchema = new mongoose.Schema({
     start: { type: Date, required: true },
     end: { type: Date, required: true },
     active: { type: Boolean, required: true },
+    public: { type: Boolean, required: false },
+    publicFeatures: { type: Array, required: false },
 })

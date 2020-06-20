@@ -7,6 +7,7 @@ import { AuthGuard } from '../../utils/auth.guard';
 import { PostReservationDto } from './dto/post.reservation.dto';
 import { UserId , UserDec} from '../../utils/user.decorator';
 import { User } from '../user/user.entity';
+import { PutPublicReservationDto } from './dto/put.public-reservation.dto';
 
 @ApiTags('reservation')
 @Controller('reservation')
@@ -27,13 +28,17 @@ export class ReservationController {
     async getOneById(@Param('id') id){
       return await this.reservationService.getOneById(id)
     }
-
+    
     @Get('/secondary')
     @ApiResponse({status:200,type:[ReservationDto], description:'Returns array of future reservations as secondaryUser'})
     async getSecondary(@UserDec() user:User){
       return await this.reservationService.getReservationByUserIdSecondary(user.userCode)
     }
-
+    @Get('/public')
+    @ApiResponse({status:200,type:[ReservationDto], description:'Returns array of future reservations'})
+    async getAllPublic(@UserDec() user:User){
+      return await this.reservationService.getAllPublic()
+    }
     @Get('/active')
     @ApiResponse({status:200,type:[ReservationDto], description:'Returns an active reservation'})
     async getActive(@UserDec() user:User){
@@ -51,6 +56,13 @@ export class ReservationController {
     @ApiResponse({status:201,type:ReservationDto, description:'Activates reservation if inside the hour'})
     async activate(@Param('id') id,@UserDec() user){
       return await this.reservationService.activateReservation(id,user)
+    }
+
+    @Put('/share/:id')
+    @ApiParam({name:'id', example:'5e99dc2766e67109b80e4257'})
+    @ApiResponse({status:201,type:ReservationDto, description:'Activates reservation if inside the hour'})
+    async openToPublic(@Param('id') id,@Body() body:PutPublicReservationDto,@UserDec() user){
+      return await this.reservationService.openToPublic(id,body,user)
     }
 
     @Delete(':id')

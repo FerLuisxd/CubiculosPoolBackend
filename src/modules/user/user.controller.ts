@@ -17,7 +17,7 @@ export class UserController {
   // @Get()
   // @ApiResponse({status:200,type:[User], description:'Returns array of Users'})
   // async getUser(){
-  //   return this.userService.getAll()
+  //   return this.userService.cronJobHours()
   // }
   
   @Get('/:id')

@@ -29,6 +29,16 @@ export class ReservationService {
         }
         return this.reservationModel.find(query)
     }
+    async getAllPublic() {
+        let currentDate = moment().tz("America/Lima").set({ minute: 0, second: 0, millisecond: 0 })
+        let query = {
+            start: {
+                $gte: currentDate.toISOString()
+            },
+            public: true
+        }
+        return this.reservationModel.find(query)
+    }
     async getReservationByUserIdSecondary(userCode: string) {
         let currentDate = moment().tz("America/Lima").set({ minute: 0, second: 0, millisecond: 0 })
         let query = {//
@@ -141,6 +151,32 @@ export class ReservationService {
 
         throw new HttpException('Reservation not active', 400)
 
+    }
+
+    async openToPublic(id, body,user) {
+        let currentDate = moment().set({ hour: 0 , minute: 0, second: 0, millisecond: 0 })
+        let query = {
+            userCode: user.userCode,
+            _id : id,
+            active : true
+            ,start: { "$gte": currentDate.toISOString()}
+         
+        }
+        let reservation = await this.reservationModel.findOne(query)
+        if(reservation != null && reservation?.public != true){
+            // reservation.public = true
+            // reservation.publicFeatures= body
+            // let res = await reservation.save()
+            let res = await this.reservationModel.updateOne({_id:id},{
+               "$set":{
+                public: true,
+                publicFeatures: body
+               } 
+            },{ multi: true })    
+            console.log(res)
+            return 'ok'
+        }
+        throw new HttpException('Not valid reservation', 409)
     }
     async cancelReservation(reservationId: string, user: User) {
         let query = {

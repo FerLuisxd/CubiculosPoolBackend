@@ -2,6 +2,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from './user.entity';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class UserService {
@@ -72,6 +73,15 @@ export class UserService {
         } catch(error){
             throw new InternalServerErrorException(error.message)
         }
+    }
+    
+    @Cron('0 0 0 * * *')
+    async cronJobHours(){
+        await this.userModel.updateMany({},{
+            "hoursLeft.todayHours" : "2",
+            "hoursLeft.tomorrowHours" : "2"
+        })
+        
     }
 
 
