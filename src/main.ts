@@ -7,6 +7,7 @@ import {
 import { ValidationPipe } from '@nestjs/common';
 import { AllExceptionsFilter } from './utils/exceptionFilter';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+const helmet = require('fastify-helmet')
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -31,6 +32,11 @@ async function bootstrap() {
 
   app.enableCors();
   app.useGlobalFilters(new AllExceptionsFilter());
+  app.register(
+    helmet,
+    // Example of passing an option to x-powered-by middleware
+    { hidePoweredBy: { setTo: 'PHP 4.2.0' } }
+  )
   const port = Number(process.env.PORT) || 3000
   await app.listen(port, '0.0.0.0', function (err, address) {
     if (err) {
