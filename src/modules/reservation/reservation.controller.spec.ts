@@ -38,6 +38,7 @@ const reservation :any =  {
       "Board"
     ]
   },
+  "publicFeatures": [],
   "seats": [
     {
       "name": "Luis",
@@ -152,7 +153,7 @@ describe('Reservation Controller', () => {
 
 
   it('should delete a reservation', async () => {
-    const response = await controller.cancel(reservation._id,user._id)
+    const response = await controller.cancel(reservation._id,user)
     expect(await collection.findOne({_id:reservation._id})).toBeNull
   });
 
