@@ -7,7 +7,7 @@ import {
 import { ValidationPipe } from '@nestjs/common';
 import { AllExceptionsFilter } from './utils/exceptionFilter';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-const helmet = require('fastify-helmet')
+import * as helmet from 'fastify-helmet'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
