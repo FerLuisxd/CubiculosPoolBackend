@@ -22,21 +22,21 @@ describe('Auth Controller',() => {
   const goodBody: AuthDto = {userCode: "u201713920",password: "Intranet upc2020"};
   const badBody: AuthDto = {userCode: "u000000000",password: "0000000000"};
 
-  beforeAll(async () => {
-    mongoServer = new MongoMemoryServer()
-    const mongoUri = await mongoServer.getUri()
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [AuthController],
-      providers: [AuthService, UserService],
-      imports: [MongooseModule.forRoot(mongoUri,{useNewUrlParser: true,useUnifiedTopology: true}),
-        MongooseModule.forFeature([{ name: 'users', schema: UserSchema }]),
-        UserModule],
-    }).compile();
+  // beforeAll(async () => {
+  //   mongoServer = new MongoMemoryServer()
+  //   const mongoUri = await mongoServer.getUri()
+  //   const module: TestingModule = await Test.createTestingModule({
+  //     controllers: [AuthController],
+  //     providers: [AuthService, UserService],
+  //     imports: [MongooseModule.forRoot(mongoUri,{useNewUrlParser: true,useUnifiedTopology: true}),
+  //       MongooseModule.forFeature([{ name: 'users', schema: UserSchema }]),
+  //       UserModule],
+  //   }).compile();
     
-    authService = module.get<AuthService>(AuthService);
-    authController = module.get<AuthController>(AuthController);
-    userService = module.get<UserService>(UserService);
-  });  
+  //   authService = module.get<AuthService>(AuthService);
+  //   authController = module.get<AuthController>(AuthController);
+  //   userService = module.get<UserService>(UserService);
+  // });  
 
 
 

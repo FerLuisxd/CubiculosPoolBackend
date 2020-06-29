@@ -34,7 +34,7 @@ jobs:
       run: npm install
     - name: build code
       run: npm run build
+    - name: test
+      run: npm run test --runInBand --detectOpenHandles
     - name: lint code
       run: npm run lint
-    - name: test
-      run: npm test
