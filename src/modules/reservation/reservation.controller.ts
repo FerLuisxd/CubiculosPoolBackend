@@ -38,7 +38,7 @@ export class ReservationController {
     @ApiResponse({status:200,type:[ReservationDto], description:'Returns array of future reservations'})
     async getAllPublic(@UserDec() user:User){
       return await this.reservationService.getAllPublic()
-    }
+    }//
     @Get('/active')
     @ApiResponse({status:200,type:[ReservationDto], description:'Returns an active reservation'})
     async getActive(@UserDec() user:User){
