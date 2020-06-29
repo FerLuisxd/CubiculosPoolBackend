@@ -158,10 +158,8 @@ describe('Reservation Controller', () => {
   });
 
   it('should reserve', async () => {
-    console.log('response',JSON.stringify(await controllerAvailable.getAll('','','','')))
+    // console.log('response',JSON.stringify(await controllerAvailable.getAll('','','','')))
     const response = await controller.reserve(goodPostBody, user)
-    console.log(response)
-    //expect(0).toBe(0)    
    });
 
   it('should return a reservation', async () => {

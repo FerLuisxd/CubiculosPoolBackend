@@ -22,7 +22,6 @@ export class AvailableService {
     }
     async deleteRooms(obj) {
         const query: any = {}
-        console.time('aaaa')
         const updateQuery :any = {}
         if (obj.start) {
             query.start = moment(obj.start).tz("America/Lima").toISOString()
@@ -38,7 +37,6 @@ export class AvailableService {
 
         let updateQuery2 :any =   { $pull: { available:  {code:obj.room.code, office: obj.room.office  } } }
         await this.availableModel.updateMany(query, updateQuery2)
-        console.timeEnd('aaaa')
     }
     @Cron('0 0 */1 * * *')
     async handleCron() {
@@ -104,7 +102,6 @@ export class AvailableService {
 
     async getAvailableRooms(obj) {
         const query: any = {}
-        console.log('entro?')
         let projection = {}
         if (obj.start) {
             //query.start = moment(obj.start).tz("America/Lima").toISOString()
@@ -141,10 +138,10 @@ export class AvailableService {
         let response = await this.availableModel.find(query, projection)
         response = JSON.parse(JSON.stringify(response))
         for (let i = 0; i < response.length; i++) {
-        console.log('query',query)
+        // console.log('query',query)
             response[i].start = moment(response[i].start).tz("America/Lima").format()
         }
-        console.log('getAvailableRooms', response)
+        // console.log('getAvailableRooms', response)
         return response
     }
 }

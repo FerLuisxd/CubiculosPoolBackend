@@ -4,7 +4,7 @@ import { ReservationService } from './reservation.service';
 describe('ReservationService', () => {
   let service: ReservationService;
 
-  beforeEach(async () => {
+  beforeEach( () => {
     // const module: TestingModule = await Test.createTestingModule({
     //   providers: [ReservationService],
     // }).compile();
