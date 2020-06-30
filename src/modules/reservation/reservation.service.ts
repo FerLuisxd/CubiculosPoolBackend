@@ -7,6 +7,7 @@ import { Model } from 'mongoose';
 import { AvailableService } from '../available/available.service';
 import { PostReservationDto } from './dto/post.reservation.dto';
 import * as moment from 'moment-timezone'
+import { PutPublicReservationDto } from './dto/put.public-reservation.dto';
 /* eslint-disable prefer-const*/
 
 @Injectable()
@@ -86,7 +87,7 @@ export class ReservationService {
                 return response
                 //this.userService.updateReduceHours(user._id, response.hours)
             }
-            if (!response) {
+            if (response == null) {
                 currentDate.add(-1, 'hours').toISOString()
                     let query = {
                         _id: id,
@@ -112,7 +113,7 @@ export class ReservationService {
                     // console.log('response', JSON.stringify(responseSecondary))
                     let duration = moment.duration(moment(responseSecondary.end).diff(moment(responseSecondary.start)));    
                     let hours = duration.asHours();
-                    if (responseSecondary && user.hoursLeft.secondaryHours >= hours &&  responseSecondary.userSecondaryCode == user.userCode) {
+                    if (user.hoursLeft.secondaryHours >= hours &&  responseSecondary.userSecondaryCode == user.userCode) {
                         // console.log('hours', hours)
                         this.userService.updateReduceHoursSecondary(user._id, user.hoursLeft.secondaryHours - hours)
                         this.userService.updateStatus(user._id, true)
@@ -124,12 +125,12 @@ export class ReservationService {
                              $pull: { 'seats': { userCode: user.userCode } } 
                         }
                         this.reservationModel.findOneAndUpdate(query, updateQuery)
-                        throw new HttpException({ reasonCode: 3, reason: 'Secondary user does not have enough hours' }, 409)
+                        throw new HttpException({ code: 13, message: 'Secondary user does not have enough hours' }, 409)
                     }
             }
-            throw new HttpException('User cannot activate this room', 400)
+            throw new HttpException({code:11, message:'User cannot activate this room'}, 400)
         }
-        else throw new HttpException('User already in room', 400)
+        else throw new HttpException({code:10, message:'User already in room'}, 400)
 
     }
 
@@ -250,5 +251,46 @@ export class ReservationService {
         bodyToSave.userCode = user.userCode
         bodyToSave.userSecondaryCode = body.userSecondaryCode
         return await this.saveNew(bodyToSave)
+    }
+
+    async joinPublic(body: PutPublicReservationDto, id:string, user:User){
+        if(user.inRoom) throw new HttpException({code:2,message:'User Already in room'},409)
+        let query = {
+            _id : id,
+            active : true,
+            public : true
+        }
+        
+        let reservation : ReservationDto = await this.reservationModel.findOne(query)
+        if(reservation != null){
+            if(reservation.room.seats <= reservation.seats.length){
+                let reservationObj = JSON.parse(JSON.stringify(reservation))
+                for (let i = 0; i < body.features.length; i++) {
+                    let index = reservationObj.publicFeatures.indexOf(body.features[i])
+                    if( index == -1){
+                        throw new HttpException({code:2,message:'Feature not aviable'},409)
+                    }
+                    else{
+                        reservationObj.publicFeatures.splice(index,1)
+                    }
+                }
+    
+                let updateQuery: any = {
+                    publicFeatures: reservationObj.publicFeatures,
+                    $push: {
+                        seats: {
+                            userCode: user.userCode,
+                            name: user.name,
+                            features: body
+                        }
+                    }
+                }
+                this.userService.updateStatus(user._id, true)
+                return await this.reservationModel.findOneAndUpdate(query, updateQuery)
+            }
+            else throw new HttpException({code:3,message:'Reservation is full'},409)
+        }
+        else throw new HttpException({code:1,message:'Reservation not found'},409)
+
     }
 }

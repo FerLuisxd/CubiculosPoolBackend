@@ -38,7 +38,7 @@ export class ReservationController {
     @ApiResponse({status:200,type:[ReservationDto], description:'Returns array of future reservations'})
     async getAllPublic(@UserDec() user:User){
       return await this.reservationService.getAllPublic()
-    }//
+    }
     @Get('/active')
     @ApiResponse({status:200,type:[ReservationDto], description:'Returns an active reservation'})
     async getActive(@UserDec() user:User){
@@ -49,6 +49,12 @@ export class ReservationController {
     @ApiResponse({status:201,type:ReservationDto, description:'Makes reservations for 1 user'})
     async reserve(@Body() body: PostReservationDto,@UserDec() user){
       return await this.reservationService.reserve(body,user)
+    }
+
+    @Post('/public/:id')
+    @ApiResponse({status:200,type:[ReservationDto], description:'Returns array of future reservations'})
+    async joinPublic(@Body() body:PutPublicReservationDto ,@Param('id') id,@UserDec() user:User){
+      return await this.reservationService.joinPublic(body,id,user)
     }
 
     @Put(':id')
