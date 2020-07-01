@@ -79,9 +79,10 @@ export class UserService {
     async cronJobHours(){
         await this.userModel.updateMany({},{
             "hoursLeft.todayHours" : 2,
-            "hoursLeft.tomorrowHours" : 2
+            "hoursLeft.tomorrowHours" : 2,
+            "hoursLeft.secondaryHours":2,
+            "inRoom":false
         })
-        
     }
 
 

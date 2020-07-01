@@ -61,7 +61,6 @@ export class ReservationService {
     }
 
     async activateReservation(id, user: User) {
-
         if (user.inRoom == false) {
             let currentDate = moment().tz("America/Lima").set({ minute: 0, second: 0, millisecond: 0 })
             let query = {
@@ -182,9 +181,8 @@ export class ReservationService {
         let query = {
             userCode: user.userCode,
             _id: id,
-            active: true
-            , start: { "$gte": currentDate.toISOString() }
-
+            active: true, 
+            start: { "$gte": currentDate.toISOString() }
         }
         let reservation = await this.reservationModel.findOne(query)
         if (reservation != null && reservation?.public != true) {
@@ -304,7 +302,7 @@ export class ReservationService {
                         seats: {
                             userCode: user.userCode,
                             name: user.name,
-                            features: body
+                            features: body.features
                         }
                     }
                 }
