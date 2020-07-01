@@ -194,7 +194,7 @@ export class ReservationService {
             let res = await this.reservationModel.updateOne({ _id: id }, {
                 "$set": {
                     public: true,
-                    publicFeatures: body
+                    publicFeatures: body.features
                 }
             }, { multi: true })
             return 'ok'
@@ -286,7 +286,7 @@ export class ReservationService {
 
         let reservation: ReservationDto = await this.reservationModel.findOne(query)
         if (reservation != null) {
-            if (reservation.room.seats <= reservation.seats.length) {
+            if (  reservation.seats.length <= reservation.room.seats) {
                 let reservationObj = JSON.parse(JSON.stringify(reservation))
                 for (let i = 0; i < body.features.length; i++) {
                     let index = reservationObj.publicFeatures.indexOf(body.features[i])

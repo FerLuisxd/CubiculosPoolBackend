@@ -52,7 +52,7 @@ export class ReservationController {
     }
 
     @Post('/public/:id')
-    @ApiResponse({status:200,type:[ReservationDto], description:'Returns array of future reservations'})
+    @ApiResponse({status:200,type:[ReservationDto], description:'Join Public Reservation'})
     async joinPublic(@Body() body:PutPublicReservationDto ,@Param('id') id,@UserDec() user:User){
       return await this.reservationService.joinPublic(body,id,user)
     }
@@ -66,7 +66,7 @@ export class ReservationController {
 
     @Put('/share/:id')
     @ApiParam({name:'id', example:'5e99dc2766e67109b80e4257'})
-    @ApiResponse({status:201,type:ReservationDto, description:'Join Public Reservation'})
+    @ApiResponse({status:201,type:ReservationDto, description:'Opens Private Reservation'})
     async openToPublic(@Param('id') id,@Body() body:PutPublicReservationDto,@UserDec() user){
       return await this.reservationService.openToPublic(id,body,user)
     }
