@@ -66,7 +66,7 @@ export class ReservationController {
 
     @Put('/share/:id')
     @ApiParam({name:'id', example:'5e99dc2766e67109b80e4257'})
-    @ApiResponse({status:201,type:ReservationDto, description:'Activates reservation if inside the hour'})
+    @ApiResponse({status:201,type:ReservationDto, description:'Join Public Reservation'})
     async openToPublic(@Param('id') id,@Body() body:PutPublicReservationDto,@UserDec() user){
       return await this.reservationService.openToPublic(id,body,user)
     }
