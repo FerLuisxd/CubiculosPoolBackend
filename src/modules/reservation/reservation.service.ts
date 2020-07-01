@@ -271,6 +271,8 @@ export class ReservationService {
         bodyToSave.seats = []
         bodyToSave.userCode = user.userCode
         bodyToSave.userSecondaryCode = body.userSecondaryCode
+        bodyToSave.public = false
+        bodyToSave.publicFeatures = []
         return await this.saveNew(bodyToSave)
     }
 
