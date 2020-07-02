@@ -234,6 +234,7 @@ export class ReservationService {
         return await reservationSave.save()
     }
     async reserve(body: PostReservationDto, user: User) {
+        
         let rooms = await this.availableService.getAvailableRooms({
             code: body.room.code,
             start: body.start,
@@ -272,7 +273,7 @@ export class ReservationService {
         }
         bodyToSave.seats = []
         bodyToSave.userCode = user.userCode
-        bodyToSave.userSecondaryCode = body.userSecondaryCode
+        bodyToSave.userSecondaryCode = body.userSecondaryCode.toUpperCase()
         bodyToSave.public = false
         bodyToSave.publicFeatures = []
         bodyToSave.theme = ''
