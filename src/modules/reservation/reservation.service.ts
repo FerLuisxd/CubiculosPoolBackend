@@ -82,6 +82,7 @@ export class ReservationService {
                 }
             }
             let response = await this.reservationModel.findOneAndUpdate(query, updateQuery)
+            console.log('response', response)
             if (response != null) {
                 this.userService.updateStatus(user._id, true)
                 return response
@@ -111,45 +112,49 @@ export class ReservationService {
                 let responseSecondary = await this.reservationModel.findOneAndUpdate(query, updateQuery)
                 // console.log('response',responseSecondary)
                 // console.log('response', JSON.stringify(responseSecondary))
-                let duration = moment.duration(moment(responseSecondary.end).diff(moment(responseSecondary.start)));
-                let hours = duration.asHours();
-                // TODO: CODE BELOW NEEDS TO BE REFACTORED, CODE COULD BE REUSED.
-                if (responseSecondary.userSecondaryCode == user.userCode) {
-                    if (user.hoursLeft.secondaryHours >= hours) {
-                        this.userService.updateReduceHoursSecondary(user._id, user.hoursLeft.secondaryHours - hours)
-                        this.userService.updateStatus(user._id, true)
-                        return responseSecondary
+                if(responseSecondary != null){
+                    let duration = moment.duration(moment(responseSecondary.end).diff(moment(responseSecondary.start)));
+                    let hours = duration.asHours();
+                    // TODO: CODE BELOW NEEDS TO BE REFACTORED, CODE COULD BE REUSED.
+                    if (responseSecondary.userSecondaryCode == user.userCode) {
+                        if (user.hoursLeft.secondaryHours >= hours) {
+                            this.userService.updateReduceHoursSecondary(user._id, user.hoursLeft.secondaryHours - hours)
+                            this.userService.updateStatus(user._id, true)
+                            return responseSecondary
+                        }
+                        updateQuery = {
+                            active: false,
+                            $pull: { 'seats': { userCode: user.userCode } }
+                        }
+                        this.reservationModel.findOneAndUpdate(query, updateQuery)
+                        throw new HttpException({ code: 13, message: 'Secondary user does not have enough hours' }, 409)
+    
                     }
-                    updateQuery = {
-                        active: false,
-                        $pull: { 'seats': { userCode: user.userCode } }
+                    if (responseSecondary.userCode == user.userCode) {
+                        if (user.hoursLeft.todayHours >= hours) {
+                            this.userService.updateReduceHours(user._id, user.hoursLeft.todayHours - hours)
+                            this.userService.updateStatus(user._id, true)
+                            return responseSecondary
+                        }
+                        updateQuery = {
+                            active: false,
+                            $pull: { 'seats': { userCode: user.userCode } }
+                        }
+                        this.reservationModel.findOneAndUpdate(query, updateQuery)
+                        throw new HttpException({ code: 13, message: 'Primery user does not have enough hours' }, 409)
                     }
-                    this.reservationModel.findOneAndUpdate(query, updateQuery)
-                    throw new HttpException({ code: 13, message: 'Secondary user does not have enough hours' }, 409)
+                    else {
+                        updateQuery = {
+                            active: false,
+                            $pull: { 'seats': { userCode: user.userCode } }
+                        }
+                        this.reservationModel.findOneAndUpdate(query, updateQuery)
+                        throw new HttpException({ code: 13, message: 'User is not able to activate' }, 409)
+    
+                    }
+                }
+                else throw new HttpException({ code: 13, message: 'Cannot activate room' }, 409)
 
-                }
-                if (responseSecondary.userCode == user.userCode) {
-                    if (user.hoursLeft.todayHours >= hours) {
-                        this.userService.updateReduceHours(user._id, user.hoursLeft.todayHours - hours)
-                        this.userService.updateStatus(user._id, true)
-                        return responseSecondary
-                    }
-                    updateQuery = {
-                        active: false,
-                        $pull: { 'seats': { userCode: user.userCode } }
-                    }
-                    this.reservationModel.findOneAndUpdate(query, updateQuery)
-                    throw new HttpException({ code: 13, message: 'Primery user does not have enough hours' }, 409)
-                }
-                else {
-                    updateQuery = {
-                        active: false,
-                        $pull: { 'seats': { userCode: user.userCode } }
-                    }
-                    this.reservationModel.findOneAndUpdate(query, updateQuery)
-                    throw new HttpException({ code: 13, message: 'User is not able to activate' }, 409)
-
-                }
             }
             throw new HttpException({ code: 11, message: 'User cannot activate this room' }, 400)
         }
