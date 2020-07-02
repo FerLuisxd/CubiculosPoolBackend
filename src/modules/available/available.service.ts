@@ -139,8 +139,8 @@ export class AvailableService {
         response = JSON.parse(JSON.stringify(response))
         for (let i = 0; i < response.length; i++) {
         // console.log('query',query)
-            response[i].start = moment(response[i].start).tz("America/Lima").format('dddd, hA')
             response[i].startOriginal= moment(response[i].start).tz("America/Lima").format('dddd, hA')
+            response[i].start = moment(response[i].start).tz("America/Lima").format('dddd, hA')
         }
         // console.log('getAvailableRooms', response)
         return response
