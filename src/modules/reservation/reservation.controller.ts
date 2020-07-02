@@ -8,6 +8,7 @@ import { PostReservationDto } from './dto/post.reservation.dto';
 import { UserId , UserDec} from '../../utils/user.decorator';
 import { User } from '../user/user.entity';
 import { PutPublicReservationDto } from './dto/put.public-reservation.dto';
+import { PostJoinPublicDto } from './dto/post.public-reservation.dto';
 
 @ApiTags('reservation')
 @Controller('reservation')
@@ -53,7 +54,7 @@ export class ReservationController {
 
     @Post('/public/:id')
     @ApiResponse({status:200,type:[ReservationDto], description:'Join Public Reservation'})
-    async joinPublic(@Body() body:PutPublicReservationDto ,@Param('id') id,@UserDec() user:User){
+    async joinPublic(@Body() body:PostJoinPublicDto ,@Param('id') id,@UserDec() user:User){
       return await this.reservationService.joinPublic(body,id,user)
     }
 

@@ -49,6 +49,9 @@ export class ReservationDto {
     @IsArray()
     @ApiProperty({example:['MAC', 'Apple TV']})
     publicFeatures: Array<any>
+    @IsArray()
+    @ApiProperty({example:'Ciencias'})
+    theme: string
     @IsString()
     @IsNotEmpty()
     @ApiProperty({example:'u201711333'})
@@ -81,4 +84,5 @@ export const ReservationSchema = new mongoose.Schema({
     active: { type: Boolean, required: true },
     public: { type: Boolean, required: false },
     publicFeatures: { type: Array, required: false },
+    theme: { type: String, required: false },
 })

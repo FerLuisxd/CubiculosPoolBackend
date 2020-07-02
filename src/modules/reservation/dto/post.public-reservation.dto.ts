@@ -3,15 +3,11 @@ import { ApiProperty } from '@nestjs/swagger';
 
 
 
-export class PutPublicReservationDto {
+export class PostJoinPublicDto {
     @IsArray()
     @IsNotEmpty()
     @ApiProperty({example:[
         'MAC', 'Apple Tv'
     ]})
     features:Array<any>
-    @IsString()
-    @IsNotEmpty()
-    @ApiProperty({example:'Ciencias'})
-    theme:string
 }   

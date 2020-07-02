@@ -8,6 +8,7 @@ import { AvailableService } from '../available/available.service';
 import { PostReservationDto } from './dto/post.reservation.dto';
 import * as moment from 'moment-timezone'
 import { PutPublicReservationDto } from './dto/put.public-reservation.dto';
+import { PostJoinPublicDto } from './dto/post.public-reservation.dto';
 /* eslint-disable prefer-const*/
 
 @Injectable()
@@ -176,7 +177,7 @@ export class ReservationService {
 
     }
 
-    async openToPublic(id, body, user) {
+    async openToPublic(id, body:PutPublicReservationDto, user) {
         let currentDate = moment().set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
         let query = {
             userCode: user.userCode,
@@ -192,7 +193,8 @@ export class ReservationService {
             let res = await this.reservationModel.updateOne({ _id: id }, {
                 "$set": {
                     public: true,
-                    publicFeatures: body.features
+                    publicFeatures: body.features,
+                    theme: body.theme
                 }
             }, { multi: true })
             return 'ok'
@@ -273,10 +275,11 @@ export class ReservationService {
         bodyToSave.userSecondaryCode = body.userSecondaryCode
         bodyToSave.public = false
         bodyToSave.publicFeatures = []
+        bodyToSave.theme = ''
         return await this.saveNew(bodyToSave)
     }
 
-    async joinPublic(body: PutPublicReservationDto, id: string, user: User) {
+    async joinPublic(body: PostJoinPublicDto, id: string, user: User) {
         if (user.inRoom) throw new HttpException({ code: 2, message: 'User Already in room' }, 409)
         let query = {
             _id: id,
