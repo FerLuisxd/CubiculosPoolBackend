@@ -6,7 +6,7 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import { RoomService } from '../room/room.service';
 const startingHours = 7
 const closingHours = 22
-
+moment.locale('es');
 /* eslint-disable prefer-const*/
 @Injectable()
 export class AvailableService {
@@ -139,7 +139,8 @@ export class AvailableService {
         response = JSON.parse(JSON.stringify(response))
         for (let i = 0; i < response.length; i++) {
         // console.log('query',query)
-            response[i].start = moment(response[i].start).tz("America/Lima").format()
+            response[i].start = moment(response[i].start).tz("America/Lima").format('dddd, hA')
+            response[i].startOriginal= moment(response[i].start).tz("America/Lima").format('dddd, hA')
         }
         // console.log('getAvailableRooms', response)
         return response

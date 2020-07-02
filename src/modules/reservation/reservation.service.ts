@@ -10,6 +10,7 @@ import * as moment from 'moment-timezone'
 import { PutPublicReservationDto } from './dto/put.public-reservation.dto';
 import { PostJoinPublicDto } from './dto/post.public-reservation.dto';
 /* eslint-disable prefer-const*/
+moment.locale('es');
 
 @Injectable()
 export class ReservationService {
@@ -29,7 +30,14 @@ export class ReservationService {
                 $lte: currentDate.add(24, 'hours').toISOString()
             }
         }
-        return this.reservationModel.find(query)
+        let response = await this.reservationModel.find(query)
+        response = JSON.parse(JSON.stringify(response))
+        for (let i = 0; i < response.length; i++) {
+        // console.log('query',query)
+            response[i].start = moment(response[i].start).tz("America/Lima").format('dddd, hA')
+        }
+        // console.log('getAvailableRooms', response)
+        return response
     }
     async getAllPublic() {
         let currentDate = moment().tz("America/Lima").set({ minute: 0, second: 0, millisecond: 0 })
@@ -39,7 +47,14 @@ export class ReservationService {
             },
             public: true
         }
-        return this.reservationModel.find(query)
+        let response = await this.reservationModel.find(query)
+        response = JSON.parse(JSON.stringify(response))
+        for (let i = 0; i < response.length; i++) {
+        // console.log('query',query)
+            response[i].start = moment(response[i].start).tz("America/Lima").format('dddd, hA')
+        }
+        // console.log('getAvailableRooms', response)
+        return response
     }
     async getReservationByUserIdSecondary(userCode: string) {
         let currentDate = moment().tz("America/Lima").set({ minute: 0, second: 0, millisecond: 0 })
@@ -58,7 +73,15 @@ export class ReservationService {
             userCode: userCode,
             active: true
         }
-        return this.reservationModel.findOne(query)
+        let response= await this.reservationModel.findOne(query)
+        response = JSON.parse(JSON.stringify(response))
+        for (let i = 0; i < response.length; i++) {
+        // console.log('query',query)
+            response[i].start = moment(response[i].start).tz("America/Lima").format('dddd, hA')
+        }
+        // console.log('getAvailableRooms', response)
+        return response
+        
     }
 
     async activateReservation(id, user: User) {

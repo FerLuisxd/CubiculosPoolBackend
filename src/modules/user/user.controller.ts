@@ -14,11 +14,11 @@ import { UserId } from '../../utils/user.decorator';
 export class UserController {
   constructor(private readonly userService: UserService) { }
   
-  // @Get()
-  // @ApiResponse({status:200,type:[User], description:'Returns array of Users'})
-  // async getUser(){
-  //   return this.userService.cronJobHours()
-  // }
+  @Get()
+  @ApiResponse({status:200,type:[User], description:'Returns array of Users'})
+  async getUser(){
+    return this.userService.cronJobHours()
+  }
   
   @Get('/:id')
   @ApiParam({name:'id',type:'string',example:'5e99dc2766e67109b80e4257', description:'User Id'})
