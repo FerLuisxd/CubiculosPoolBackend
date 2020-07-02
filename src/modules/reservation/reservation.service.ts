@@ -202,7 +202,7 @@ export class ReservationService {
                     theme: body.theme
                 }
             }, { multi: true })
-            return 'ok'
+            return this.reservationModel.findOne(query)
         }
         throw new HttpException('Not valid reservation', 409)
     }
