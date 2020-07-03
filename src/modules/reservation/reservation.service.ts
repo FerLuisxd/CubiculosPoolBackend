@@ -34,7 +34,8 @@ export class ReservationService {
         response = JSON.parse(JSON.stringify(response))
         for (let i = 0; i < response.length; i++) {
         // console.log('query',query)
-            response[i].start = moment(response[i].start).tz("America/Lima").format('dddd, hA')
+            response[i].startParsed = moment(response[i].start).tz("America/Lima").format('dddd, hA')
+            response[i].endParsed = moment(response[i].end).tz("America/Lima").format('dddd, hA')
         }
         // console.log('getAvailableRooms', response)
         return response
@@ -51,7 +52,8 @@ export class ReservationService {
         response = JSON.parse(JSON.stringify(response))
         for (let i = 0; i < response.length; i++) {
         // console.log('query',query)
-            response[i].start = moment(response[i].start).tz("America/Lima").format('dddd, hA')
+        response[i].startParsed = moment(response[i].start).tz("America/Lima").format('dddd, hA')
+        response[i].endParsed = moment(response[i].end).tz("America/Lima").format('dddd, hA')
         }
         // console.log('getAvailableRooms', response)
         return response
@@ -77,7 +79,8 @@ export class ReservationService {
         response = JSON.parse(JSON.stringify(response))
         for (let i = 0; i < response.length; i++) {
         // console.log('query',query)
-            response[i].start = moment(response[i].start).tz("America/Lima").format('dddd, hA')
+        response[i].startParsed = moment(response[i].start).tz("America/Lima").format('dddd, hA')
+        response[i].endParsed = moment(response[i].end).tz("America/Lima").format('dddd, hA')
         }
         // console.log('getAvailableRooms', response)
         return response
